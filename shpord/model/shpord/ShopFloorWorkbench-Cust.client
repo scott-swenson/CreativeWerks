@@ -1,0 +1,93 @@
+client ShopFloorWorkbench;
+component SHPORD;
+layer Cust;
+description "Put some useful description here ...";
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+
+-------------------------------- MAIN PAGES ---------------------------------
+@Override
+page Form using ShopFloorWorkbenchHeadSet {
+
+
+
+   list CLotBatchOperationLotList(CLotBatchOperationLotArray) bind ShopFloorWorkbenchOperationsList {
+      display = Nested;
+   }
+
+
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+--------------------------------- FIELDSETS ---------------------------------
+fieldset CLotBatchOperationLotFieldset for CLotBatchOperationLot {
+   static OrderNo;
+   static ReleaseNo;
+   static SequenceNo;
+   static OperationNo;
+   static Contract;
+   static PartNo;
+   lov CLotBatchShiftRef with CLotBatchShiftSelector {
+      label = "Shift ID";
+   }
+   field ManufactureDate;
+   static CustomerId;
+   static CustomerName;
+   static JobLotBatchNo;
+   field JobLotBatchOverride;
+   static FinishedGoodLotBatchNo;
+   field FinishGoodLotBatchOverride;
+   static ProposedLocation;
+   field PalletQuantity;
+   static Season;
+   static OldestRmItem;
+   static OldestRmLot;
+   static WorkCenter;
+   static WorkCenterAlias;
+}
+
+---------------------------------- GROUPS -----------------------------------
+group CLotBatchOperationLotGroup for CLotBatchOperationLot {
+   fieldset CLotBatchOperationLotFieldset;
+}
+
+----------------------------------- LISTS -----------------------------------
+list CLotBatchOperationLotList for CLotBatchOperationLot {
+   editmode = SingleCellEdit;
+   fieldset CLotBatchOperationLotFieldset;
+}
+
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

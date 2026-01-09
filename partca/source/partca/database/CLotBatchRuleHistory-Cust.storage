@@ -1,0 +1,19 @@
+-----------------------------------------------------------------------------
+--
+--  Logical unit: CLotBatchRuleHistory
+--  Component:    PARTCA
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+
+layer Cust;
+
+-------------------- TABLE DEFINITIONS --------------------------------------
+
+
+-------------------- OTHER DEFINITIONS --------------------------------------
+SEQUENCE C_Lot_Batch_Rule_Hist_Seq IS MINVALUE 1000000000 START WITH 1000000000 INCREMENT BY 1 NOCACHE ORDER;

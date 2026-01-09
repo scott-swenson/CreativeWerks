@@ -1,0 +1,95 @@
+client Customer;
+component ENTERP;
+layer Cust;
+description "Put some useful description here ...";
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+include fragment CLotBatchCustCalFragment;
+include fragment CLotBatchShiftAliasFragment;
+include fragment CCustomerSiteAliasFragment;
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+@Override
+navigator {
+   @Override
+   entry CustomerNavEntry parent EnterpNavigator.CustomerMenu at index 100 {
+      label = "Customer";
+
+      page Form selector CustomerInfoSelector;
+      entry CLotBatchCustCalNavEntry;
+      entry CLotBatchShiftAliasNavEntry;
+      entry CCustomerSiteAliasNavEntry;
+   }
+
+   entry CLotBatchCustCalNavEntry {
+      label = "Lot Batch Calendar";
+      page CLotBatchCustCalPage selector CustomerInfoSelector;
+   }
+   entry CLotBatchShiftAliasNavEntry {
+      label = "Shift Alias";
+      page CLotBatchShiftAliasPage selector CustomerInfoSelector;
+   }
+   entry CCustomerSiteAliasNavEntry {
+      label = "Site Alias";
+      page CCustomerSiteAliasPage selector CustomerInfoSelector;
+   }
+}
+-------------------------------- MAIN PAGES ---------------------------------
+page CLotBatchCustCalPage using CustomerInfoSet {
+   label = "Customer Calendar";
+   selector CustomerInfoSelector;
+   group CustomerHeaderGroup;
+   list CLotBatchCustCalAltList(CLotBatchCustCalArray) bind CustomerInfoSelector;
+}
+
+page CLotBatchShiftAliasPage using CustomerInfoSet {
+   label = "Shift Alias";
+   selector CustomerInfoSelector;
+   group CustomerHeaderGroup;
+   list CLotBatchShiftAliasCustList(CLotBatchShiftAliasArray) bind CustomerInfoSelector;
+}
+
+page CCustomerSiteAliasPage using CustomerInfoSet {
+   label = "Shift Alias";
+   selector CustomerInfoSelector;
+   group CustomerHeaderGroup;
+   list CCustomerSiteAliasList(CCustomerSiteAliasArray) bind CustomerInfoSelector;
+}
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

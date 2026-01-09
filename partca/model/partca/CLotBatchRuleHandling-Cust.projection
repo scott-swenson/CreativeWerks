@@ -1,0 +1,57 @@
+projection CLotBatchRuleHandling;
+component PARTCA;
+layer Cust;
+description "Put some useful description here ...";
+category Users;
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+entityset CLotBatchRuleHeadSet for CLotBatchRuleHead;
+entityset CLotBatchRuleHistorySet for CLotBatchRuleHistory;
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CLotBatchRuleHead {
+
+   reference CustomerInfoRef(CustomerId) to CustomerInfo(CustomerId);
+   reference CLotBatchRuleCatRef(Category) to CLotBatchRuleCat(Category);
+   array CLotBatchRuleLineArray(RuleId) to CLotBatchRuleLine(RuleId);
+   array CLotBatchRuleHistoryArray(RuleId) to CLotBatchRuleHistory(RuleId);
+}
+
+@Override
+entity CLotBatchRuleLine {
+
+   reference CLotBatchRuleHeadRef(RuleId) to CLotBatchRuleHead(RuleId);
+   array CLotBatchRuleHistoryArray(RuleId, LineNo) to CLotBatchRuleHistory(RuleId, LineNo);
+}
+
+@Override
+entity CLotBatchRuleHistory {
+   crud = Read;
+   reference CLotBatchRuleHeadRef(RuleId) to CLotBatchRuleHead(RuleId);
+   reference CLotBatchRuleLineRef(RuleId, LineNo) to CLotBatchRuleLine(RuleId, LineNo);
+}
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

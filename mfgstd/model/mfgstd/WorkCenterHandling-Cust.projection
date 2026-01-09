@@ -1,0 +1,45 @@
+projection WorkCenterHandling;
+component MFGSTD;
+layer Cust;
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity WorkCenter {
+
+   array CWorkCenterAliasArray(Contract, WorkCenterNo) to CWorkCenterAlias(Contract, WorkCenterNo);
+}
+
+@Override
+entity CWorkCenterAlias {
+
+   reference CustomerInfoRef(CustomerId) to CustomerInfo(CustomerId);
+}
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

@@ -1,0 +1,91 @@
+client ManageCLotBatchCalendar;
+component ENTERP;
+layer Cust;
+projection CLotBatchCalendarHandling;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+include fragment CLotBatchCustCalFragment;
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+navigator {
+   entry CLotBatchCalendarOverviewPageNavEntry parent EnterpNavigator.CustomerMenu at index 201 {
+      label = "Lot Batch Calendar";
+      page CLotBatchCalendarOverviewPage;
+   }
+   entry CLotBatchCustCalOverviewPageNavEntry parent EnterpNavigator.CustomerMenu at index 202 {
+      label = "Lot Batch Customers Calendar";
+      page CLotBatchCustCalOverviewPage;
+   }
+}
+
+
+
+
+-------------------------------- MAIN PAGES ---------------------------------
+page CLotBatchCalendarOverviewPage using CLotBatchCalendarSet {
+   label = "Lot Batch Calendar";
+   list CLotBatchCalendarList;
+   list CLotBatchCustCalSubList(CLotBatchCustCalArray) bind CLotBatchCalendarList {
+      display = Nested;
+   }
+}
+
+page CLotBatchCustCalOverviewPage using CLotBatchCustCalSet {
+   label = "Lot Batch Customer Calendar";
+   list CLotBatchCustCalMainList;
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+list CLotBatchCalendarList for CLotBatchCalendar {
+   field DateFull;
+   static DateKey;
+   static CharacterDate;
+   static FullYear;
+   static QuarterNumber;
+   static WeekNumber;
+   static WeekDayName;
+   static MonthDay;
+   static MonthName;
+   static YearDay;
+   static DateDefinition;
+   static WeekDay;
+   static MonthNumber;
+   static JulianDate;
+}
+
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

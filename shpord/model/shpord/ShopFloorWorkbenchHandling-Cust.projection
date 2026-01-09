@@ -1,0 +1,154 @@
+projection ShopFloorWorkbenchHandling;
+component SHPORD;
+layer Cust;
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CLotBatchOperationLot using ShopOrderOperation {
+   keys = OrderNo, ReleaseNo, SequenceNo, OperationNo;
+   from = "C_Lot_Batch_Operation";
+   crud = Read, Update;
+   attribute OrderNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute ReleaseNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute SequenceNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute OperationNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute Contract Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute PartNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute ShiftId Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [true];
+   }
+   attribute ManufactureDate Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [true];
+   }
+   attribute CustomerId Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute CustomerName Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute JobLotBatchNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute JobLotBatchOverride Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [true];
+   }
+   attribute FinishedGoodLotBatchNo Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute FinishGoodLotBatchOverride Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [true];
+   }
+   attribute ProposedLocation Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute PalletQuantity Integer {
+      insertable = [false];
+      updatable = [false];
+      editable = [true];
+   }
+   attribute Season Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute OldestRmItem Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute OldestRmLot Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute WorkCenter Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+   attribute WorkCenterAlias Text {
+      insertable = [false];
+      updatable = [false];
+      editable = [false];
+   }
+
+   reference CLotBatchShiftRef(ShiftId) to CLotBatchShift(ShiftId);
+}
+
+@Override
+entity ShopOrderOperation {
+
+
+   array CLotBatchOperationLotArray(OrderNo, ReleaseNo, SequenceNo, OperationNo) to CLotBatchOperationLot(OrderNo, ReleaseNo, SequenceNo, OperationNo);
+}
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

@@ -1,0 +1,19 @@
+-----------------------------------------------------------------------------
+--
+--  Logical unit: PartHandling
+--  Component:    PARTCA
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+layer Cust;
+
+PROCEDURE Set_Rule_In_Use___ (
+   key_ IN C_Lot_Batch_Rule_Part_Key)
+IS
+BEGIN
+	C_Lot_Batch_Rule_Part_API.Set_Rule_In_Use(key_.part_no, key_.rule_id);
+END Set_Rule_In_Use___;

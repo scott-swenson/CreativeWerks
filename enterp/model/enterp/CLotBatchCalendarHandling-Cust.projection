@@ -1,0 +1,42 @@
+projection CLotBatchCalendarHandling;
+component ENTERP;
+layer Cust;
+description "Put some useful description here ...";
+category Users;
+
+--------------------------------- FRAGMENTS ---------------------------------
+include fragment CLotBatchCustCalFragment;
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+entityset CLotBatchCalendarSet for CLotBatchCalendar;
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CLotBatchCalendar {
+
+   array CLotBatchCustCalArray(DateFull) to CLotBatchCustCal(DateFull);
+}
+
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

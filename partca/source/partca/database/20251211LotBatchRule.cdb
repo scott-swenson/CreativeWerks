@@ -1,0 +1,22 @@
+-----------------------------------------------------------------------------
+--  Module : PARTCA
+--
+--  File   : 20251211LotBatchRule.cdb
+--
+--  IFS Developer Studio Template Version 2.6
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+--  251211  swens   Adding Lot batch rule ID
+-----------------------------------------------------------------------------
+-- [IFS COMPLETE BLOCK DECLAREEND]
+DECLARE
+   table_name_ VARCHAR2(30) := 'PART_CATALOG_TAB';
+   columns_    Database_SYS.ColumnTabType;
+   column_     Database_SYS.ColRec;
+BEGIN
+   Database_SYS.Set_Table_Column(columns_, 'C_LOT_BATCH_RULE_ID', 'NUMBER', 'Y');
+   Database_SYS.Create_Or_Replace_Table(table_name_, columns_, '&IFSAPP_DATA', NULL, TRUE);
+END;
+-- [END IFS COMPLETE BLOCK]
+/

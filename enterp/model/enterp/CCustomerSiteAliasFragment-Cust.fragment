@@ -1,0 +1,52 @@
+fragment CCustomerSiteAliasFragment;
+component ENTERP;
+layer Cust;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+include fragment CompanySitePubSelector;
+
+----------------------------- CLIENT FRAGMENTS ------------------------------
+
+
+--------------------------------- FIELDSETS ---------------------------------
+fieldset CCustomerSiteAliasCoreFieldset for CCustomerSiteAlias {
+   lov CompanySitePubRef with ReferenceCompanySitePubSelector {
+      label = "Site";
+      description = CompanySiteRef.Description;
+   }
+   field ClientSiteCode;
+   field ClientWarehouseCode;
+   field IsaReceiverId;
+   field IsaSenderId;
+}
+
+
+----------------------------------- LISTS -----------------------------------
+list CCustomerSiteAliasList for CCustomerSiteAlias {
+   label = "Customer Alias";
+   fieldset CCustomerSiteAliasCoreFieldset;
+}
+
+list CCustomerSiteAliasOverviewList for CCustomerSiteAlias {
+   label = "Customer Site Alias";
+   lov CustomerInfoRef with CustomerInfoSelector {
+      label = "Customer ID";
+      description = CustomerInfoRef.Name;
+   }
+   fieldset CCustomerSiteAliasCoreFieldset;
+}
+
+--------------------------- PROJECTION FRAGMENTS ----------------------------
+
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+entityset CCustomerSiteAliasSet for CCustomerSiteAlias;
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CCustomerSiteAlias {
+
+   reference CustomerInfoRef(CustomerId) to CustomerInfo(CustomerId);
+   reference CompanySitePubRef(Contract) to CompanySitePub(Contract);
+}

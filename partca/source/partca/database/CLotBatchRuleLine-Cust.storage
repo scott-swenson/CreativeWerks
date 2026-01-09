@@ -1,0 +1,19 @@
+-----------------------------------------------------------------------------
+--
+--  Logical unit: CLotBatchRuleLine
+--  Component:    PARTCA
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+
+layer Cust;
+
+-------------------- TABLE DEFINITIONS --------------------------------------
+
+
+-------------------- OTHER DEFINITIONS --------------------------------------
+UNIQUE INDEX C_LOT_BATCH_RULE_LINE_UIX2 IS C_LOT_BATCH_RULE_LINE_TAB(RULE_ID, sequence_no);

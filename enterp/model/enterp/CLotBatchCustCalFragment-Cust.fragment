@@ -1,0 +1,82 @@
+fragment CLotBatchCustCalFragment;
+component ENTERP;
+layer Cust;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+
+----------------------------- CLIENT FRAGMENTS ------------------------------
+
+
+----------------------------------- PAGES -----------------------------------
+
+
+--------------------------------- FIELDSETS ---------------------------------
+fieldset CLotBatchCustCalFieldSet for CLotBatchCustCal {
+   field DayCode;
+   field MonthCode;
+   field YearCode;
+   field Holiday;
+}
+
+
+fieldset CLotBatchCustCalReadOnlyFieldSet for CLotBatchCustCal {
+   static CLotBatchCalendarRef.DateKey;
+   static CLotBatchCalendarRef.CharacterDate;
+   static CLotBatchCalendarRef.FullYear;
+   static CLotBatchCalendarRef.QuarterNumber;
+   static CLotBatchCalendarRef.WeekNumber;
+   static CLotBatchCalendarRef.WeekDayName;
+   static CLotBatchCalendarRef.MonthDay;
+   static CLotBatchCalendarRef.MonthName;
+   static CLotBatchCalendarRef.YearDay;
+   static CLotBatchCalendarRef.DateDefinition;
+   static CLotBatchCalendarRef.WeekDay;
+   static CLotBatchCalendarRef.MonthNumber;
+   static CLotBatchCalendarRef.JulianDate;
+}
+
+
+
+----------------------------------- LISTS -----------------------------------
+list CLotBatchCustCalMainList for CLotBatchCustCal {
+   lov CLotBatchCalendarRef with CLotBatchCalendarSelector {
+      label = "DateFull";
+   }
+   lov CustomerInfoRef with CustomerInfoSelector {
+      label = "Customer ID";
+   }
+   static CustomerInfoRef.Name;
+   fieldset CLotBatchCustCalFieldSet;
+   fieldset CLotBatchCustCalReadOnlyFieldSet;
+}
+
+
+list CLotBatchCustCalSubList for CLotBatchCustCal {
+   lov CustomerInfoRef with CustomerInfoSelector {
+      label = "Customer ID";
+   }
+   static CustomerInfoRef.Name;
+   fieldset CLotBatchCustCalFieldSet;
+}
+
+list CLotBatchCustCalAltList for CLotBatchCustCal {
+   label = "";
+   fieldset CLotBatchCustCalFieldSet;
+   fieldset CLotBatchCustCalReadOnlyFieldSet;
+}
+--------------------------- PROJECTION FRAGMENTS ----------------------------
+
+
+--------------------------------- ENTITYSET ---------------------------------
+entityset CLotBatchCustCalSet for CLotBatchCustCal;
+
+
+---------------------------------- ENTITY -----------------------------------
+@Override
+entity CLotBatchCustCal {
+
+   reference CLotBatchCalendarRef(DateFull) to CLotBatchCalendar(DateFull);
+   reference CustomerInfoRef(CustomerId) to CustomerInfo(CustomerId);
+}

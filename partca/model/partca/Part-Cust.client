@@ -1,0 +1,115 @@
+client Part;
+component PARTCA;
+layer Cust;
+description "Put some useful description here ...";
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+
+-------------------------------- MAIN PAGES ---------------------------------
+@Override
+page Form {
+
+   tabs {
+      tab {
+         label = "Lot Batch Rules";
+         list CLotBatchRulePartList(CLotBatchRulePartArray);
+      }
+      tab {
+         label = "Standard Values";
+         arrange {
+            group CCustomer;
+            group CUnits;
+         }
+         group CShelfLifeValues;
+      }
+   }
+}
+
+--------------------------------- COMMANDS ----------------------------------
+command SetRuleInUseCommand for CLotBatchRulePart {
+   label = "Set Rule In Use";
+   enabled = [RuleInUse = false];
+   execute {
+      call SetRuleInUse();
+   }
+}
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+group CCustomer for PartCatalog {
+   label = "Customer Info";
+   lov CustomerInfoRef with CustomerInfoSelector {
+      label = "Customer ID";
+   }
+   static CustomerInfoRef.Name;
+}
+group CUnits for PartCatalog {
+   label = "Units";
+   field CConsUnitPerUom {
+      label = "Consumer Unit Per UoM";
+   }
+}
+group CShelfLifeValues for PartCatalog {
+   label = "Shelf Life Values";
+   field CSpecialShelfLife {
+      label = "Special Shelf Life";
+   }
+   field CConsumerShelfLife {
+      label = "Consumer Shelf Life";
+   }
+   field CWarehouseShelfLife {
+      label = "Warehouse Shelf Life";
+   }
+}
+
+----------------------------------- LISTS -----------------------------------
+list CLotBatchRulePartList for CLotBatchRulePart {
+   label = "Lot Batch Rules";
+   lov PartCatalogRef with PartCatalogSelector {
+      label = "Part No";
+      columnvisible = [false];
+   }
+   lov CLotBatchRuleHeadRef with CLotBatchRuleHeadSelector {
+      label = "Rule ID";
+      details = "page/ManageCLotBatchRule/CLotBatchRuleHeadDetail?filter=RuleId eq ${RuleId}";
+   }
+   badge CLotBatchRuleHeadRef.Objstate {
+      label = "Status";
+      emphasis StatePreliminary = [CLotBatchRuleHeadRef.Objstate = "Preliminary"];
+      emphasis StateActive = [CLotBatchRuleHeadRef.Objstate = "Active"];
+      emphasis StateObsolete = [CLotBatchRuleHeadRef.Objstate = "Obsolete"];
+   }
+   field RuleInUse;
+   command SetRuleInUseCommand;
+}
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

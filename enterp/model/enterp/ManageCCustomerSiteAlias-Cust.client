@@ -1,0 +1,63 @@
+client ManageCCustomerSiteAlias;
+component ENTERP;
+layer Cust;
+projection CCustomerSiteAliasHandling;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+include fragment CCustomerSiteAliasFragment;
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+navigator {
+   entry CCustomerSiteAliasOverviewPageNavEntry parent EnterpNavigator.CustomerMenu at index 203 {
+      label = "Customer Site Alias Overview";
+      page CCustomerSiteAliasOverviewPage;
+   }
+   
+}
+
+
+
+
+-------------------------------- MAIN PAGES ---------------------------------
+page CCustomerSiteAliasOverviewPage using CCustomerSiteAliasSet {
+   label = "Customer Site Alias";
+   list CCustomerSiteAliasOverviewList;
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

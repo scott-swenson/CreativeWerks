@@ -1,0 +1,20 @@
+-----------------------------------------------------------------------------
+--
+--  Logical unit: CLotBatchRuleHead
+--  Component:    PARTCA
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+
+layer Cust;
+
+-------------------- TABLE DEFINITIONS --------------------------------------
+
+
+-------------------- OTHER DEFINITIONS --------------------------------------
+SEQUENCE C_Lot_Batch_Rule_Head_Seq IS MINVALUE 100000 START WITH 100000 INCREMENT BY 1 NOCACHE ORDER;
+UNIQUE INDEX C_Lot_Batch_Rule_Name_UIX IS C_LOT_BATCH_RULE_HEAD_TAB(RULE_NAME);

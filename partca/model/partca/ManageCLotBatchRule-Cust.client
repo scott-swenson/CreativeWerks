@@ -1,0 +1,256 @@
+client ManageCLotBatchRule;
+component PARTCA;
+layer Cust;
+projection CLotBatchRuleHandling;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+navigator {
+   entry CLotBatchRuleHeadGeneratorNavEntry parent PartcaNavigator.MasterPartPartLotTracking at index 10000 {
+      label = "Lot Batch Generator";
+   }
+   entry CLotBatchRuleHeadOverviewNavEntry parent ManageCLotBatchRule.CLotBatchRuleHeadGeneratorNavEntry at index 100 {
+      label = "Lot Batch Generator Overview";
+      page CLotBatchRuleHeadOverview;
+   }
+   entry CLotBatchRuleHeadDetailNavEntry parent ManageCLotBatchRule.CLotBatchRuleHeadGeneratorNavEntry at index 200 {
+      label = "Lot Batch Generator Detail";
+      page CLotBatchRuleHeadDetail selector CLotBatchRuleHeadSelector;
+      entry CLotBatchRuleLineOverviewNavEntry;
+      entry CLotBatchRuleHistoryOverviewNavEntry;
+   }
+   entry BasicDataNavEntry parent ManageCLotBatchRule.CLotBatchRuleHeadGeneratorNavEntry at index 300 {
+      label = "Basic Data";
+   }
+   entry CLotBatchRuleLineOverviewNavEntry {
+      label = "Lines";
+      page CLotBatchRuleLineOverview selector CLotBatchRuleHeadSelector;
+   }
+   entry CLotBatchRuleHistoryOverviewNavEntry {
+      label = "History";
+      page CLotBatchRuleHistoryOverview selector CLotBatchRuleHeadSelector;
+   }
+}
+
+-------------------------------- MAIN PAGES ---------------------------------
+page CLotBatchRuleHeadOverview using CLotBatchRuleHeadSet {
+   label = "Lot Batch Rule Overview";
+   list CLotBatchRuleHeadList;
+}
+
+page CLotBatchRuleHeadDetail using CLotBatchRuleHeadSet {
+   label = "Lot Batch Rule Detail";
+   stateindicator CLotBatchRuleHeadStateCustomIndicator;
+   selector CLotBatchRuleHeadSelector;
+   group CLotBatchRuleHeadGroup;
+   commandgroup {
+      commandgroup {
+         label = "Status";
+         command SetActive;
+         command SetObsolete;
+      }
+   }
+}
+
+page CLotBatchRuleLineOverview using CLotBatchRuleHeadSet {
+   label = "Rule Lines";
+   selector CLotBatchRuleHeadSelector;
+   group CLotBatchRuleHeadSimpleGroup;
+   list CLotBatchRuleLineList(CLotBatchRuleLineArray);
+}
+
+page CLotBatchRuleHistoryOverview using CLotBatchRuleHeadSet {
+   label = "Lot Batch Rule History";
+   selector CLotBatchRuleHeadSelector;
+   group CLotBatchRuleHeadSimpleGroup;
+   list CLotBatchRuleHistoryList(CLotBatchRuleHistoryArray);
+}
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+selector CustomerInfoCustomSelector for CustomerInfo {
+   label = "${CustomerId} - ${Name}";
+
+   static CustomerId {
+      contactwidget {
+         enabled = [true];
+         source = Customer;
+         key = CustomerId;
+      }
+   }
+   static Name;
+   static AssociationNo;
+   static CustomerCategory;
+   static OneTime {
+      visible = [false];
+   }
+}
+
+---------------------------------- GROUPS -----------------------------------
+fieldset CLotBatchRuleHeadFieldset for CLotBatchRuleHead {
+   static RuleId {
+      details = CLotBatchRuleHeadDetail(RuleId);
+   }
+   field RuleName;
+   field Description;
+   lov CustomerInfoRef with CustomerInfoCustomSelector {
+      label = "Customer ID";
+      description = CustomerInfoRef.Name;
+
+   }
+   lov CLotBatchRuleCatRef with CLotBatchRuleCatSelector {
+      label = "Category";
+   }
+   badge Objstate {
+      label = "Status";
+      emphasis StatePreliminary = [Objstate = "Preliminary"];
+      emphasis StateActive = [Objstate = "Active"];
+      emphasis StateObsolete = [Objstate = "Obsolete"];
+   }
+   field DateCreated;
+   field CreatedBy;
+   field DateModified;
+   field ModifiedBy;
+}
+
+
+fieldset CLotBatchRuleLineFieldset for CLotBatchRuleLine {
+   static RuleId {
+      columnvisible = [false];
+   }
+   static LineNo {
+      columnvisible = [false];
+   }
+   field SequenceNo;
+   field Description;
+   field SegmentLength;
+   field Type;
+   field Format;
+   field AllowableValues;
+   field ReturnType {
+      validate command {
+         execute {
+            if [original.ReturnType != ReturnType or original.FunctionId != FunctionId or original.FixedValue != FixedValue] {
+               if [ReturnType = "Fixed"] {
+                  set FunctionId = null;
+               }
+               if [ReturnType = "Function"] {
+                  set FixedValue = null;
+               }
+            }
+         }
+      }
+   }
+   field FunctionId {
+      editable = [ReturnType = "Function"];
+   }
+   field FixedValue {
+      editable = [ReturnType = "Fixed"];
+   }
+   field AddSpaceAfter;
+   field AddNewLineAfter;
+   field CompareIgnore;
+   field HjIgnoreSql;
+}
+
+
+fieldset CLotBatchRuleHistoryFieldSet for CLotBatchRuleHistory {
+   static HistoryNo;
+   lov CLotBatchRuleHeadRef with CLotBatchRuleHeadSelector {
+      label = "RuleId";
+      details = CLotBatchRuleHeadDetail(RuleId);
+      editable = [false];
+   }
+   lov CLotBatchRuleLineRef with CLotBatchRuleLineSelector {
+      label = "Line No";
+      editable = [false];
+   }
+   static OldValue;
+   static NewValue;
+   static DateEntered;
+   static UserId;
+   static MessageText;
+   static HistState;
+}
+---------------------------------- GROUPS -----------------------------------
+group CLotBatchRuleHeadGroup for CLotBatchRuleHead {
+   label = "Lot Batch Rule";
+   fieldset CLotBatchRuleHeadFieldset;
+}
+
+
+group CLotBatchRuleHeadSimpleGroup for CLotBatchRuleHead {
+   label = "Lot Batch Rule";
+   static RuleId;
+   static RuleName;
+   static Category;
+}
+----------------------------------- LISTS -----------------------------------
+list CLotBatchRuleHeadList for CLotBatchRuleHead {
+   label = "Lot Batch Rule";
+   fieldset CLotBatchRuleHeadFieldset;
+   commandgroup {
+      commandgroup {
+         label = "Status";
+         command SetActive;
+         command SetObsolete;
+      }
+   }
+}
+
+
+list CLotBatchRuleLineList for CLotBatchRuleLine {
+   orderby = RuleId, SequenceNo;
+   label = "Lot Batch Rule Lines";
+   fieldset CLotBatchRuleLineFieldset;
+}
+
+
+list CLotBatchRuleHistoryList for CLotBatchRuleHistory {
+   label = "History";
+   orderby = HistoryNo desc;
+   fieldset CLotBatchRuleHistoryFieldSet;
+}
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+stateindicator CLotBatchRuleHeadStateCustomIndicator for CLotBatchRuleHead {
+   state "Preliminary" {
+      completed = 10%;
+      emphasis StatePrelmiinary = [Objstate = "Preliminary"];
+   }
+   state "Active" {
+      completed = 100%;
+      emphasis StateActive = [Objstate = "Active"];
+   }
+   state "Obsolete" {
+      completed = 0%;
+      emphasis StateObsolete = [Objstate = "Obsolete"];
+   }
+
+}
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

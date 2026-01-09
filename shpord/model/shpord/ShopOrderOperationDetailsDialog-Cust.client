@@ -1,0 +1,161 @@
+client ShopOrderOperationDetailsDialog;
+component SHPORD;
+layer Cust;
+description "Put some useful description here ...";
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+
+-------------------------------- MAIN PAGES ---------------------------------
+@Override
+assistant ShopOrderOperationDetailsDialog using ShopOrderOperationDetailsVirtualSet {
+   label = "Operation Guide";
+   singlestep {
+      group CLotBatchOperationLotLotGeneralInfoGroup using CGetLotBatchInfo(OrderNo, ReleaseNo, SequenceNo, OperationNo);
+      arrange {
+         arrange {
+            group CLotBatchOperationLotCustomerInfoGroup using CGetLotBatchInfo(OrderNo, ReleaseNo, SequenceNo, OperationNo);
+            group CLotBatchOperationLotShiftInfoGroup using CGetLotBatchInfo(OrderNo, ReleaseNo, SequenceNo, OperationNo);
+         }
+         arrange {
+            group CLotBatchOperationLotLotBatchInfoDefaultGroup using CGetLotBatchInfo(OrderNo, ReleaseNo, SequenceNo, OperationNo);
+            group CLotBatchOperationLotLotBatchInfoOverrideGroup using CGetLotBatchInfo(OrderNo, ReleaseNo, SequenceNo, OperationNo);
+         }
+      }
+   }
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+--------------------------------- FIELDSETS ---------------------------------
+fieldset CLotBatchOperationLotFieldset for CLotBatchOperationLot {
+   lov CLotBatchShiftRef with CLotBatchShiftSelector {
+      label = "Shift ID";
+   }
+   field ManufactureDate {
+      type = Date;
+   }
+   static CustomerId;
+   static CustomerName;
+   static JobLotBatchNo;
+   field JobLotBatchOverride;
+   static FinishedGoodLotBatchNo;
+   field FinishGoodLotBatchOverride;
+   static ProposedLocation;
+   field PalletQuantity;
+   static Season;
+   static OldestRmItem;
+   static OldestRmLot;
+   static WorkCenter;
+   static WorkCenterAlias;
+}
+
+fieldset CLotBatchOperationLotCustomerInfoFieldset for CLotBatchOperationLot {
+   static CustomerId;
+   static CustomerName;
+   static WorkCenterAlias;
+}
+
+fieldset CLotBatchOperationLotShiftInfoFieldset for CLotBatchOperationLot {
+   lov CLotBatchShiftRef with CLotBatchShiftSelector {
+      label = "Shift ID";
+   }
+   field ManufactureDate {
+      type = Date;
+   }
+   field PalletQuantity;
+}
+
+fieldset CLotBatchOperationLotLotBatchInfoFieldset for CLotBatchOperationLot {
+   static JobLotBatchNo;
+   field JobLotBatchOverride;
+   static FinishedGoodLotBatchNo;
+   field FinishGoodLotBatchOverride;
+}
+
+fieldset CLotBatchOperationLotLotBatchInfoDefaultFieldset for CLotBatchOperationLot {
+   static JobLotBatchNo;
+   static FinishedGoodLotBatchNo;
+}
+
+fieldset CLotBatchOperationLotLotBatchInfoOverrideFieldset for CLotBatchOperationLot {
+   field JobLotBatchOverride;
+   field FinishGoodLotBatchOverride;
+}
+
+fieldset CLotBatchOperationLotLotGeneralInfoFieldset for CLotBatchOperationLot {
+   static ProposedLocation;
+   static Season;
+   static OldestRmItem;
+   static OldestRmLot;
+}
+
+
+---------------------------------- GROUPS -----------------------------------
+group CLotBatchOperationLotGroup for CLotBatchOperationLot {
+   label = "Lot Batch Info";
+   fieldset CLotBatchOperationLotFieldset;
+}
+
+
+group CLotBatchOperationLotCustomerInfoGroup for CLotBatchOperationLot {
+   label = "Customer Info";
+   fieldset CLotBatchOperationLotCustomerInfoFieldset;
+}
+
+group CLotBatchOperationLotShiftInfoGroup for CLotBatchOperationLot {
+   label = "Shift Info";
+   fieldset CLotBatchOperationLotShiftInfoFieldset;
+}
+
+group CLotBatchOperationLotLotBatchInfoGroup for CLotBatchOperationLot {
+   label = "Lot Batch Info";
+   fieldset CLotBatchOperationLotLotBatchInfoFieldset;
+}
+
+group CLotBatchOperationLotLotGeneralInfoGroup for CLotBatchOperationLot {
+   label = "General Info";
+   fieldset CLotBatchOperationLotLotGeneralInfoFieldset;
+}
+
+group CLotBatchOperationLotLotBatchInfoDefaultGroup for CLotBatchOperationLot {
+   label = "Lot Default";
+   fieldset CLotBatchOperationLotLotBatchInfoDefaultFieldset;
+}
+
+group CLotBatchOperationLotLotBatchInfoOverrideGroup for CLotBatchOperationLot {
+   label = "Lot Override";
+   fieldset CLotBatchOperationLotLotBatchInfoOverrideFieldset;
+}
+----------------------------------- LISTS -----------------------------------
+
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

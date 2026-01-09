@@ -1,0 +1,43 @@
+projection CustomerHandling;
+component ENTERP;
+layer Cust;
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+include fragment CLotBatchCustCalFragment;
+include fragment CLotBatchShiftAliasFragment;
+include fragment CCustomerSiteAliasFragment;
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CustomerInfo {
+
+   array CLotBatchCustCalArray(CustomerId) to CLotBatchCustCal(CustomerId);
+   array CLotBatchShiftAliasArray(CustomerId) to CLotBatchShiftAlias(CustomerId);
+   array CCustomerSiteAliasArray(CustomerId) to CCustomerSiteAlias(CustomerId);
+}
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

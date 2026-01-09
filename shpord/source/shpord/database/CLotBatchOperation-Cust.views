@@ -1,0 +1,51 @@
+-----------------------------------------------------------------------------
+--
+--  Logical unit: CLotBatchOperation
+--  Component:    SHPORD
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+layer Cust;
+
+-------------------- PUBLIC VIEW DEFINITIONS --------------------------------
+
+
+-------------------- PRIVATE VIEW DEFINITIONS -------------------------------
+--need to add column definitions.
+VIEW C_Lot_Batch_Operation IS 
+SELECT s.order_no,
+       s.release_no,
+       s.sequence_no,
+       s.operation_no,
+       l.contract,
+       l.part_no,
+       l.shift_id,
+       l.manufacture_date,
+       l.customer_id,
+       l.customer_name,
+       l.job_lot_batch_no,
+       l.job_lot_batch_override,
+       l.finished_good_lot_batch_no,
+       l.finish_good_lot_batch_override,
+       l.proposed_location,
+       l.pallet_quantity,
+       l.season,
+       l.oldest_rm_item,
+       l.oldest_rm_lot,
+       l.work_center,
+       l.work_center_alias,
+       s.rowid AS objid,
+       to_char(s.rowversion, 'YYYYMMDDHH24MISS') AS objversion,
+       s.rowkey AS objkey
+  FROM shop_order_operation_tab s
+  LEFT OUTER JOIN TABLE(c_lot_batch_operation_api.Get_Lot_Batch_Parameters(s.order_no, s.release_no, s.sequence_no, s.operation_no)) l
+    ON l.order_no = s.order_no
+   AND l.release_no = s.release_no
+   AND l.sequence_no = s.sequence_no
+   AND l.operation_no = s.operation_no;
+
+

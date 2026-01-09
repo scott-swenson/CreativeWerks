@@ -1,0 +1,62 @@
+client ManageCLotBatchRuleCategory;
+component PARTCA;
+layer Cust;
+projection CLotBatchRuleCategoryHandling;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+navigator {
+   entry CLotBatchRuleCatOverviewPageNavEntry parent ManageCLotBatchRule.BasicDataNavEntry at index 100 {
+      label = "Lot Batch Rule Categories";
+      page CLotBatchRuleCatOverviewPage;
+   }
+}
+
+-------------------------------- MAIN PAGES ---------------------------------
+page CLotBatchRuleCatOverviewPage using CLotBatchRuleCatSet {
+   label = "Lot Batch Rule Categories";
+   list CLotBatchRuleCatList;
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+list CLotBatchRuleCatList for CLotBatchRuleCat {
+   field Category;
+   field Description;
+}
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

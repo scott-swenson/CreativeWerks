@@ -1,0 +1,49 @@
+projection PartHandling;
+component PARTCA;
+layer Cust;
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity CLotBatchRulePart {
+
+   reference PartCatalogRef(PartNo) to PartCatalog(PartNo);
+   reference CLotBatchRuleHeadRef(RuleId) to CLotBatchRuleHead(RuleId);
+   action SetRuleInUse {
+      ludependencies = CLotBatchRulePart;
+   }
+}
+
+@Override
+entity PartCatalog {
+
+   reference CustomerInfoRef(CCustomerId) to CustomerInfo(CustomerId);
+   array CLotBatchRulePartArray(PartNo) to CLotBatchRulePart(PartNo);
+}
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

@@ -1,0 +1,66 @@
+client ManageCLotBatchShift;
+component ENTERP;
+layer Cust;
+projection CLotBatchShiftHandling;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+navigator {
+   entry CLotBatchShiftOverviewPageNavEntry parent EnterpNavigator.CustomerMenu at index 202 {
+      label = "Lot Batch Shift";
+      page CLotBatchShiftOverviewPage;
+   }
+}
+
+
+-------------------------------- MAIN PAGES ---------------------------------
+page CLotBatchShiftOverviewPage using CLotBatchShiftSet {
+   label = "Lot Batch Shift";
+   list CLotBatchShiftList;
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+fieldset CLotBatchShiftFieldSet for CLotBatchShift {
+   field ShiftId;
+   field Description;
+}
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+list CLotBatchShiftList   for CLotBatchShift {
+   fieldset CLotBatchShiftFieldSet;
+}
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

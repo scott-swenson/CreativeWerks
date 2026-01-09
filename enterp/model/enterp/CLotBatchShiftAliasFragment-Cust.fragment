@@ -1,0 +1,52 @@
+fragment CLotBatchShiftAliasFragment;
+component ENTERP;
+layer Cust;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+
+----------------------------- CLIENT FRAGMENTS ------------------------------
+
+fieldset CLotBatchShiftAliasFieldset for CLotBatchShiftAlias {
+   field CustomerId {
+      columnvisible = [false];
+   }
+   lov CLotBatchShiftRef with CLotBatchShiftSelector {
+      label = "Shift ID";
+   }
+   static CLotBatchShiftRef.Description;
+   field Alias;
+}
+
+
+
+list CLotBatchShiftAliasMainList for CLotBatchShiftAlias {
+   lov CustomerInfoRef with CustomerInfoSelector {
+      label = "Customer ID";
+   }
+   fieldset CLotBatchShiftAliasFieldset;
+}
+
+list CLotBatchShiftAliasCustList for CLotBatchShiftAlias {
+   fieldset CLotBatchShiftAliasFieldset;
+}
+--------------------------- PROJECTION FRAGMENTS ----------------------------
+
+------------------------------- ENTRY POINTS --------------------------------
+entityset CLotBatchShiftSet for CLotBatchShift;
+
+
+---------------------------------- ENTITY -----------------------------------
+@Override
+entity CLotBatchShift {
+
+}
+
+
+@Override
+entity CLotBatchShiftAlias {
+
+   reference CLotBatchShiftRef(ShiftId) to CLotBatchShift(ShiftId);
+   reference CustomerInfoRef(CustomerId) to CustomerInfo(CustomerId);
+}
