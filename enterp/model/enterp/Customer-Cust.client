@@ -51,7 +51,7 @@ page CLotBatchShiftAliasPage using CustomerInfoSet {
 }
 
 page CCustomerSiteAliasPage using CustomerInfoSet {
-   label = "Shift Alias";
+   label = "Site Alias";
    selector CustomerInfoSelector;
    group CustomerHeaderGroup;
    list CCustomerSiteAliasList(CCustomerSiteAliasArray) bind CustomerInfoSelector;
