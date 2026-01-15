@@ -1,0 +1,69 @@
+projection EstimateItemHandling;
+component ESTMAN;
+layer Cust;
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+
+------------------------------ ENTITY DETAILS -------------------------------
+@Override
+entity EstimateTopNode using EstimateNode {
+   ludependencies = EstimateAddCost, EstimateNode, CEstimatePerPallet;
+   @DynamicComponentDependency ESTPRD
+   attribute CQuantityPerPallet Number {
+      label = "Qty Per Pallet";
+      fetch = "Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID)";
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute CConsumerUnitPerUom Number {
+      label = "Consumer Unit Per UoM";
+      fetch = "Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_ID, Estimate_Revision_No, Node_ID)";
+   }
+   array CEstimatePerPalletRef(EstimateId, EstimateRevisionNo, SelectedVersionNo, NodeId) to CEstimatePerPallet(EstimateId, EstimateRevisionNo, EstimateCostVersion, NodeId);
+   action ResetPerPalletToDefaultCommand {
+      ludependencies = CEstimatePerPallet;
+   }
+}
+
+@Override
+entity CEstimatePerPallet {
+   attribute OverheadType Enumeration(CEstOverheadType) {
+      fetch = "Overhead_type_db";
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute TotalPallets Number {
+      fetch = "Estimate_Component_API.Get_Version_Qty(ESTIMATE_ID, ESTIMATE_REVISION_NO, NODE_ID) / nvl(Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID), 1)";
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute TotalAmount Number {
+      format = ifscurrency;
+      fetch = "Amount_Per_Pallet * Estimate_Component_API.Get_Version_Qty(ESTIMATE_ID, ESTIMATE_REVISION_NO, NODE_ID) / nvl(Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID), 1)";
+   }
+   reference CostElementRef(Company, CostElementId) to ProjectCostElement(Company, ProjectCostElement);
+}
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

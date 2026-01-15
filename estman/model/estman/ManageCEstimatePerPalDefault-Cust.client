@@ -1,0 +1,80 @@
+client ManageCEstimatePerPalDefault;
+component ESTMAN;
+layer Cust;
+projection CEstimatePerPalDefaultHandling;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+navigator {
+   entry CEstimatePerPalDefaultOverviewNavEntry parent EstmanNavigator.EstimateBidManagementBasicDataNavEntry at index 1000 {
+      label = "Per Pallet Defaults";
+      page CEstimatePerPalDefaultOverview;
+
+   }
+
+
+}
+
+-------------------------------- MAIN PAGES ---------------------------------
+page CEstimatePerPalDefaultOverview using CEstimatePerPalDefaultSet {
+   label = "Per Pallet Defaults";
+   list CEstimatePerPalDefaultList;
+}
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+list CEstimatePerPalDefaultList for CEstimatePerPalDefault {
+   orderby = Contract, OverheadType;
+   static Company;
+   lov CompanySiteRef with CompanySiteSelector {
+      label = "Site";
+      description = CompanySiteRef.Name;
+      validate command {
+         execute {
+            set Company = CompanySiteRef.Company;
+         }
+      }
+   }
+   field OverheadType;
+   lov CostElementRef with ProjectCostElementSelector {
+      label = "Cost Element";
+      description = CostElementRef.Description;
+   }
+   field AmountPerPallet;
+}
+
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------
