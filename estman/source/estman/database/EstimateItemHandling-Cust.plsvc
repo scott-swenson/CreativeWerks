@@ -46,6 +46,40 @@ BEGIN
 END CRUD_Update___;
 
 
+@Override
+PROCEDURE CRUD_Update___ (
+   etag_   IN OUT VARCHAR2,
+   key_    IN OUT Estimate_Child_Node_Key,
+   attr_   IN OUT VARCHAR2,
+   info_   OUT VARCHAR2,
+   action_ IN  VARCHAR2 )
+IS
+   $IF Component_Estprd_SYS.INSTALLED $THEN
+      c_quantity_per_pallet_ NUMBER;
+      c_consumer_unit_per_uom_ NUMBER;
+      est_comp_rec_ Estimate_Component_API.Public_Rec;
+      attr2_ VARCHAR2(32000);
+   $END
+BEGIN
+   $IF Component_Estprd_SYS.INSTALLED $THEN
+      est_comp_rec_ := Estimate_Component_API.Get(key_.estimate_id, key_.estimate_revision_no, key_.node_id);
+      c_quantity_per_pallet_ := Client_SYS.Get_Item_Value_To_Number('C_QUANTITY_PER_PALLET', attr_, lu_name_, 'CRUD_Update___');
+      c_consumer_unit_per_uom_ := Client_SYS.Get_Item_Value_To_Number('C_CONSUMER_UNIT_PER_UOM', attr_, lu_name_, 'CRUD_Update___');
+      Client_SYS.Clear_Attr(attr2_);
+      IF c_quantity_per_pallet_ <> est_comp_rec_.c_quantity_per_pallet THEN 
+         Client_SYS.Add_To_Attr('C_QUANTITY_PER_PALLET', c_quantity_per_pallet_, attr2_);
+      END IF;
+      IF c_consumer_unit_per_uom_ <> est_comp_rec_.c_consumer_unit_per_uom THEN 
+         Client_SYS.Add_To_Attr('C_CONSUMER_UNIT_PER_UOM', c_consumer_unit_per_uom_, attr2_);
+      END IF;
+      IF attr2_ IS NOT NULL THEN 
+         Estimate_Component_API.Modify(info_, key_.estimate_id, key_.estimate_revision_no, key_.node_id, attr_);
+      END IF;
+   $END
+   super(etag_, key_, attr_, info_, action_);
+END CRUD_Update___;
+
+
 PROCEDURE Reset_Per_Pallet_To_Default_Command___ (
    key_ IN Estimate_Top_Node_Key)
 IS
@@ -55,5 +89,18 @@ IS
 BEGIN
    Get_Objid_Objversion___(objid_, objversion_, key_);
    est_rec_ := Get_Record_By_Objid___(objid_, estimate_top_node## => '');
+	C_Estimate_Per_Pallet_API.Reset_To_Defaults(est_rec_.estimate_id, est_rec_.estimate_revision_no, est_rec_.selected_version_no, est_rec_.node_id);
+END Reset_Per_Pallet_To_Default_Command___;
+
+
+PROCEDURE Reset_Per_Pallet_To_Default_Command___ (
+   key_ IN Estimate_Child_Node_Key)
+IS
+   est_rec_ Estimate_Child_Node_Rec;
+   objid_ VARCHAR2(32000);
+   objversion_ VARCHAR2(32000);
+BEGIN
+   Get_Objid_Objversion___(objid_, objversion_, key_);
+   est_rec_ := Get_Record_By_Objid___(objid_, estimate_child_node## => '');
 	C_Estimate_Per_Pallet_API.Reset_To_Defaults(est_rec_.estimate_id, est_rec_.estimate_revision_no, est_rec_.selected_version_no, est_rec_.node_id);
 END Reset_Per_Pallet_To_Default_Command___;

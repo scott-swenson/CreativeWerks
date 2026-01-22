@@ -18,12 +18,24 @@ page EstimateNodeForm using EstimateTopNodeSet {
       @DynamicComponentDependency ESTPRD
       tab {
          label = "Overhead per Pallet";
-         list CEstimatePerPalletList(CEstimatePerPalletRef);
+         list CEstimatePerPalletTopList(CEstimatePerPalletTopRef);
       }
    }
    command UpsertDefaultOverheads;
 }
 
+@Override
+page EstimateChildNodeForm using EstimateChildNodeSet {
+
+   tabs {
+      @DynamicComponentDependency ESTPRD
+      tab {
+         label = "Overhead per Pallet";
+         list CEstimatePerPalletChildList(CEstimatePerPalletChildRef);
+      }
+   }
+   command UpsertDefaultOverheads;
+}
 
 --------------------------------- COMMANDS ----------------------------------
 command UpsertDefaultOverheads for EstimateTopNode {
@@ -31,6 +43,14 @@ command UpsertDefaultOverheads for EstimateTopNode {
       call ResetPerPalletToDefaultCommand();
    }
 }
+
+
+command UpsertDefaultOverheads for EstimateChildNode {
+   execute {
+      call ResetPerPalletToDefaultCommand();
+   }
+}
+
 
 --------------------------------- SELECTORS ---------------------------------
 
@@ -54,9 +74,29 @@ group EstimateTopNodeGroup for EstimateTopNode {
    }
 }
 
+
+@Override
+group EstimateChildNodeGroup for EstimateChildNode {
+   @DynamicComponentDependency ESTPRD
+   field CQuantityPerPallet;
+   @DynamicComponentDependency ESTPRD
+   computedfield TotalPallets {
+      value = "#{RequiredQty / CQuantityPerPallet}";
+      visible = [CQuantityPerPallet > 0];
+   }
+   @DynamicComponentDependency ESTPRD
+   field CConsumerUnitPerUom;
+   @DynamicComponentDependency ESTPRD
+   computedfield TotalConsumerUnits {
+      value = "#{RequiredQty * CConsumerUnitPerUom}";
+      visible = [CConsumerUnitPerUom > 0];
+   }
+}
+
+
 ----------------------------------- LISTS -----------------------------------
 @DynamicComponentDependency ESTPRD
-list CEstimatePerPalletList for CEstimatePerPallet {
+list CEstimatePerPalletTopList for CEstimatePerPalletTop {
    orderby = Contract, OverheadType;
    label = "Overhead Per Pallet";
    field OverheadType;
@@ -72,6 +112,26 @@ list CEstimatePerPalletList for CEstimatePerPallet {
 
    summary = AmountPerPallet, TotalAmount;
 }
+
+
+@DynamicComponentDependency ESTPRD
+list CEstimatePerPalletChildList for CEstimatePerPalletChild {
+   orderby = Contract, OverheadType;
+   label = "Overhead Per Pallet";
+   field OverheadType;
+   lov CostElementRef with ProjectCostElementSelector {
+      label = "Cost Element";
+      description = CostElementRef.Description;
+   }
+   static TotalPallets {
+      columnvisible = [false];
+   }
+   field AmountPerPallet;
+   static TotalAmount;
+
+   summary = AmountPerPallet, TotalAmount;
+}
+
 
 ---------------------------------- DIALOGS ----------------------------------
 
