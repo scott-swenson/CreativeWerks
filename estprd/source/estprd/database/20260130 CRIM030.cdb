@@ -1,0 +1,26 @@
+-----------------------------------------------------------------------------
+--  Module : ESTPRD
+--
+--  File   : 20260130 CRIM030.cdb
+--
+--  IFS Developer Studio Template Version 2.6
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+--  260130  swens   Initial Release
+-----------------------------------------------------------------------------
+
+
+-- [IFS COMPLETE BLOCK DECLAREEND]
+DECLARE
+   table_name_ VARCHAR2(30) := 'ESTIMATE_COMPONENT_TAB';
+   columns_    Database_SYS.ColumnTabType;
+   column_     Database_SYS.ColRec;
+BEGIN
+   Database_SYS.Reset_Column_Table(columns_);
+   Database_SYS.Set_Table_Column(columns_, 'C_QUANTITY_PER_PALLET', 'NUMBER', 'N', '1');
+   Database_SYS.Set_Table_Column(columns_, 'C_CONSUMER_UNIT_PER_UOM', 'NUMBER', 'N', '1');
+   Database_SYS.Create_Or_Replace_Table(table_name_, columns_, '&IFSAPP_DATA', NULL, TRUE);
+END;
+-- [END IFS COMPLETE BLOCK]
+/
