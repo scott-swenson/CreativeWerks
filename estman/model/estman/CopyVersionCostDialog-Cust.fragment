@@ -1,0 +1,33 @@
+fragment CopyVersionCostDialog;
+component ESTMAN;
+layer Cust;
+description "Put some useful description here ...";
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+
+----------------------------- CLIENT FRAGMENTS ------------------------------
+
+
+--------------------------- PROJECTION FRAGMENTS ----------------------------
+@Override
+action CopyNodeVersion {
+   initialcheck EstimateNodeInitialCheck(EstimateId, EstimateRevisionNo, NodeId);
+   ludependencies = EstimateHeader, EstimateVersion, EstimateCustomer, EstimateNode, EstimateChildNode, EstimateTopNode, EstimateAddCost, CEstimatePerPallet;
+
+   parameter EstimateId Number {
+      required = [true];
+   }
+   parameter EstimateRevisionNo Number {
+      required = [true];
+   }
+   parameter VersionNo Number {
+      required = [true];
+   }
+   parameter NodeId Number {
+      required = [true];
+   }
+   parameter FromVersionNo Number {
+      required = [true];
+   }
+}

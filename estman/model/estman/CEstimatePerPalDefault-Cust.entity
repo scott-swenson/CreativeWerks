@@ -103,6 +103,7 @@
          <NAME>CompanySiteRef</NAME>
          <IS_PARENT>0</IS_PARENT>
          <IS_VIEW_REFERENCE>0</IS_VIEW_REFERENCE>
+         <DELETE_BEHAVIOUR>CASCADE</DELETE_BEHAVIOUR>
          <TO_ENTITY>CompanySite</TO_ENTITY>
          <ATTRIBUTES>
             <ASSOCIATION_ATTRIBUTE>
@@ -114,6 +115,7 @@
          <NAME>CostElementRef</NAME>
          <IS_PARENT>0</IS_PARENT>
          <IS_VIEW_REFERENCE>0</IS_VIEW_REFERENCE>
+         <DELETE_BEHAVIOUR>CASCADE</DELETE_BEHAVIOUR>
          <TO_ENTITY>ProjectCostElement</TO_ENTITY>
          <ATTRIBUTES>
             <ASSOCIATION_ATTRIBUTE>

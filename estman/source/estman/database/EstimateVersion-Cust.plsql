@@ -109,6 +109,19 @@ BEGIN
 END Calculate_Node;
 
 
+@Override 
+PROCEDURE Copy_Costs___ (
+   estimate_id_          IN NUMBER,
+   estimate_revision_no_ IN NUMBER,
+   node_id_              IN NUMBER,
+   node_type_            IN VARCHAR2,
+   from_version_         IN NUMBER,
+   to_version_           IN NUMBER)
+IS
+BEGIN
+   super(estimate_id_, estimate_revision_no_, node_id_, node_type_, from_version_, to_version_);
+   C_Estimate_Per_Pallet_API.Upsert_Costs(estimate_id_, estimate_revision_no_, node_id_, from_version_, to_version_);
+END Copy_Costs___;
 
 
 

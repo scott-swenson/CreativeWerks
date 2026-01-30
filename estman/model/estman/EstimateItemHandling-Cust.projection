@@ -11,7 +11,7 @@ layer Cust;
 ------------------------------ ENTITY DETAILS -------------------------------
 @Override
 entity EstimateTopNode using EstimateNode {
-   ludependencies = EstimateAddCost, EstimateNode, CEstimatePerPalletTop;
+   ludependencies = EstimateAddCost, EstimateNode, CEstimatePerPalletTop, CEstimatePerPallet;
    @DynamicComponentDependency ESTPRD
    attribute CQuantityPerPallet Number {
       label = "Qty Per Pallet";
@@ -30,7 +30,7 @@ entity EstimateTopNode using EstimateNode {
 
 @Override
 entity EstimateChildNode using EstimateNode {
-   ludependencies = EstimateAddCost, EstimateChildNode, EstimateNode, CEstimatePerPalletChild;
+   ludependencies = EstimateAddCost, EstimateChildNode, EstimateNode, CEstimatePerPalletChild, CEstimatePerPallet;
    @DynamicComponentDependency ESTPRD
    attribute CQuantityPerPallet Number {
       label = "Qty Per Pallet";
@@ -82,6 +82,36 @@ entity CEstimatePerPalletChild using CEstimatePerPallet {
    reference CostElementRef(Company, CostElementId) to ProjectCostElement(Company, ProjectCostElement);
 }
 
+
+@Override
+entity EstimateNodeCost {
+   @DynamicComponentDependency ESTPRD
+   attribute LevelVariableCostPerPallet Number {
+      fetch = "NVL(LEVEL_COST, 0) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id))";
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute LevelVariableCostPerConsumerUnit Number {
+      fetch = "NVL(LEVEL_COST, 0) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute AccumVariableCostPerPallet Number {
+      fetch = "NVL(ACCUMULATED_COST, 0) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id))";
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute AccumVariableCostPerConsumerUnit Number {
+      fetch = "NVL(ACCUMULATED_COST, 0) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      format = ifscurrency;
+      insertable = [false];
+   }
+
+
+}
 ------------------------------- ENUMERATIONS --------------------------------
 
 
@@ -89,8 +119,19 @@ entity CEstimatePerPalletChild using CEstimatePerPallet {
 
 
 ---------------------------------- ACTIONS ----------------------------------
+@Override
+action SetSelectedVersion {
+   initialcheck EstimateHeaderInitialCheck(EstimateId, EstimateRevisionNo);
+   parameter EstimateId          Number;
+   parameter EstimateRevisionNo  Number;
+   parameter ParentCostVersion   Number;
+   ludependencies = EstimateTopNode, EstimateChildNode, EstimateNode, EstimateAddCost, CEstimatePerPallet;
+}
 
-
+action CRefreshCEstimatePerPallet {
+   initialcheck none;
+   ludependencies = CEstimatePerPallet;
+}
 --------------------------------- FUNCTIONS ---------------------------------
 
 

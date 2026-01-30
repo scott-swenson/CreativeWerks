@@ -104,3 +104,21 @@ BEGIN
    est_rec_ := Get_Record_By_Objid___(objid_, estimate_child_node## => '');
 	C_Estimate_Per_Pallet_API.Reset_To_Defaults(est_rec_.estimate_id, est_rec_.estimate_revision_no, est_rec_.selected_version_no, est_rec_.node_id);
 END Reset_Per_Pallet_To_Default_Command___;
+
+
+@Override
+PROCEDURE Set_Selected_Version___ (
+   estimate_id_          IN NUMBER,
+   estimate_revision_no_ IN NUMBER,
+   parent_cost_version_  IN NUMBER )
+IS
+BEGIN
+   super(estimate_id_, estimate_revision_no_, parent_cost_version_);
+END Set_Selected_Version___;
+
+
+PROCEDURE C_Refresh_C_Estimate_Per_Pallet___
+IS
+BEGIN
+	NULL;
+END C_Refresh_C_Estimate_Per_Pallet___;

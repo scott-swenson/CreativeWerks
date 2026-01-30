@@ -1,0 +1,151 @@
+client EstimateDeliverables;
+component ESTMAN;
+layer Cust;
+description "Put some useful description here ...";
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- NAVIGATOR ENTRIES -----------------------------
+
+-------------------------------- MAIN PAGES ---------------------------------
+
+
+--------------------------------- COMMANDS ----------------------------------
+
+
+--------------------------------- SELECTORS ---------------------------------
+
+
+---------------------------------- GROUPS -----------------------------------
+
+
+----------------------------------- LISTS -----------------------------------
+//@Override
+//list CustomerVersionLinesList for EstimateVersion {
+//   @DynamicComponentDependency ESTPRD
+//   static CalcSalesPriceBasePerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static CalcSalesPriceCurrPerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static TotalVariableCostBasePerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static TotalAdditionalCostBasePerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static TotalCostBasePerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static CalcSalesPriceBasePerConsumerUnit;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static CalcSalesPriceCurrPerConsumerUnit;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static TotalVariableCostBasePerConsumerUnit;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static TotalAdditionalCostBasePerConsumerUnit;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static TotalCostBasePerConsumerUnit;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static SalesPriceBasePerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static SalesPriceCurrPerPallet;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static SalesPriceBasePerConsumerUnit;
+//
+//   @DynamicComponentDependency ESTPRD
+//   static SalesPriceCurrPerConsumerUnit;
+//}
+
+@Override
+list EstimateDeliverableList for EstimateDeliverable {
+   @DynamicComponentDependency ESTPRD
+   static QuantityPerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static NumberOfPallets;
+
+   @DynamicComponentDependency ESTPRD
+   static ConsumerUnits;
+
+   @DynamicComponentDependency ESTPRD
+   static ConsumerUnitsPerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static BaseSalesPricePerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static SalesPricePerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static BaseSalesPricePerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static SalesPricePerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static CalcBaseSalesPricePerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static CalcSalesPricePerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static VariableCostPerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static AdditionalCostPerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static TotalCostPerConsumerUnit;
+
+   @DynamicComponentDependency ESTPRD
+   static CalcBaseSalesPricePerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static CalcSalesPricePerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static VariableCostPerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static AdditionalCostPerPallet;
+
+   @DynamicComponentDependency ESTPRD
+   static TotalCostPerPallet;
+
+
+}
+---------------------------------- DIALOGS ----------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------
+
+
+---------------------------------- CHARTS -----------------------------------
+
+
+--------------------------------- CALENDERS ---------------------------------
+
+
+---------------------------------- SHEETS -----------------------------------
+
+
+----------------------------- STATE INDICATORS ------------------------------
+
+
+----------------------------------- TREES -----------------------------------
+
+
+---------------------------------- PLUGINS ----------------------------------
+
+
+------------------------------- IMAGE VIEWERS -------------------------------

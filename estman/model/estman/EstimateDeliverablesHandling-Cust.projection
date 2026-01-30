@@ -1,0 +1,334 @@
+projection EstimateDeliverablesHandling;
+component ESTMAN;
+layer Cust;
+
+
+--------------------------------- FRAGMENTS ---------------------------------
+
+----------------------------- MAIN ENTRY POINTS -----------------------------
+
+
+------------------------------ ENTITY DETAILS -------------------------------
+//@Override
+//entity EstimateVersion {
+//
+//   -- Fetch methods in Estimate Node Cost
+//   @DynamicComponentDependency ESTPRD
+//   attribute CalcSalesPriceBasePerPallet Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Est_Base_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Calc Sales Price Per Pallet/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute CalcSalesPriceCurrPerPallet Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Estimate_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, CUSTOMER_ID, CURRENCY_CODE) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Calc Sales Price Per Pallet/Curr";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute TotalVariableCostBasePerPallet Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Total_Var_Est_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Total Variable Cost Per Pallet/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute TotalAdditionalCostBasePerPallet Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Add_Est_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Total Additional Cost Per Pallet/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute TotalCostBasePerPallet Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Total_Accum_Est_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Total Cost Per Pallet/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute CalcSalesPriceBasePerConsumerUnit Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Est_Base_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Calc Sales Price Per Consumer Unit/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute CalcSalesPriceCurrPerConsumerUnit Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Estimate_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, CUSTOMER_ID, CURRENCY_CODE) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Calc Sales Price Per Consumer Unit/Curr";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute TotalVariableCostBasePerConsumerUnit Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Total_Var_Est_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Total Variable Cost Per Consumer Unit/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute TotalAdditionalCostBasePerConsumerUnit Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Add_Est_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Total Additional Cost Per Consumer Unit/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute TotalCostBasePerConsumerUnit Number {
+//      fetch = "Estimate_Node_Cost_API.Get_Total_Accum_Est_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Total Cost Per Consumer Unit/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   --
+//   --  Fetch methods in Estimate Deliverable
+//   @DynamicComponentDependency ESTPRD
+//   attribute SalesPriceBasePerPallet Number {
+//      fetch = "Estimate_Deliverable_API.Get_Est_Base_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, CUSTOMER_ID) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Sales Price Per Pallet/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute SalesPriceCurrPerPallet Number {
+//      fetch = "Estimate_Deliverable_API.Get_Est_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, CUSTOMER_ID,CURRENCY_CODE) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, 1))";
+//      label = "Sales Price Per Pallet/Curr";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute SalesPriceBasePerConsumerUnit Number {
+//      fetch = "Estimate_Deliverable_API.Get_Est_Base_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, CUSTOMER_ID) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Sales Price Per Consumer Unit/Base";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//
+//   }
+//   @DynamicComponentDependency ESTPRD
+//   attribute SalesPriceCurrPerConsumerUnit Number {
+//      fetch = "Estimate_Deliverable_API.Get_Est_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, CUSTOMER_ID,CURRENCY_CODE) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, 1) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, 1)";
+//      label = "Sales Price Per Consumer Unit/Curr";
+//      maxlength = 2000;
+//      editable = [false];
+//      format = ifscurrency;
+//      insertable = [false];
+//   }
+//
+//}
+
+
+@Override
+entity EstimateDeliverable {
+   @DynamicComponentDependency ESTPRD
+   attribute QuantityPerPallet Number {
+      fetch = "Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute NumberOfPallets Number {
+      fetch = "Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute ConsumerUnits Number {
+      fetch = "Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute ConsumerUnitsPerPallet Number {
+      fetch = "Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id) * Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute BaseSalesPricePerConsumerUnit Number {
+      fetch = "Estimate_Deliverable_API.Get_Node_Base_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID, CUSTOMER_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)  / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Sales Price Per Consumer Unit/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute SalesPricePerConsumerUnit Number {
+      fetch = "Estimate_Deliverable_API.Get_Node_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID, CUSTOMER_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Sales Price Per Consumer Unit/Curr";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute BaseSalesPricePerPallet Number {
+      fetch = "Estimate_Deliverable_API.Get_Node_Base_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID, CUSTOMER_ID) / Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Sales Price Per Pallet Unit/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute SalesPricePerPallet Number {
+      fetch = "Estimate_Deliverable_API.Get_Node_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID, CUSTOMER_ID) / Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Sales Price Per Pallet/Curr";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+
+   -- Fetch methods in Estimate Node Cost
+   @DynamicComponentDependency ESTPRD
+   attribute CalcBaseSalesPricePerConsumerUnit Number {
+      fetch = "Estimate_Node_Cost_API.Get_Node_Base_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = " Calc Sales Price Per Consumer Unit/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute CalcSalesPricePerConsumerUnit Number {
+      fetch = "Estimate_Node_Cost_API.Get_Node_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID, CUSTOMER_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Calc Sales Price Per Consumer Unit/Curr";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute VariableCostPerConsumerUnit Number {
+      fetch = "Estimate_Node_Cost_API.Get_Total_Var_Node_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Total Variable Cost Per Consumer Unit/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute AdditionalCostPerConsumerUnit Number {
+      fetch = "Estimate_Node_Cost_API.Get_Add_Node_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Total Additional Cost Per Consumer Unit/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute TotalCostPerConsumerUnit Number {
+      fetch = "ROUND(Estimate_Node_Cost_API.Get_Total_Accum_Node_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID), Currency_Code_API.Get_Currency_Rounding(Estimate_Header_API.Get_Company(ESTIMATE_ID, ESTIMATE_REVISION_NO), Estimate_Customer_API.Get_Currency_Code(ESTIMATE_ID, ESTIMATE_REVISION_NO, CUSTOMER_ID)))/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Total Cost Per Consumer Unit/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute CalcBaseSalesPricePerPallet Number {
+      fetch = "Estimate_Node_Cost_API.Get_Node_Base_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = " Calc Sales Price Per Pallet/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute CalcSalesPricePerPallet Number {
+      fetch = "Estimate_Node_Cost_API.Get_Node_Sales_Price(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID, CUSTOMER_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Calc Sales Price Per Pallet/Curr";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute VariableCostPerPallet Number {
+      fetch = "Estimate_Node_Cost_API.Get_Total_Var_Node_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Total Variable Cost Per Pallet/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute AdditionalCostPerPallet Number {
+      fetch = "Estimate_Node_Cost_API.Get_Add_Node_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID)/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Total Additional Cost Per Pallet/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute TotalCostPerPallet Number {
+      fetch = "ROUND(Estimate_Node_Cost_API.Get_Total_Accum_Node_Cost(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID), Currency_Code_API.Get_Currency_Rounding(Estimate_Header_API.Get_Company(ESTIMATE_ID, ESTIMATE_REVISION_NO), Estimate_Customer_API.Get_Currency_Code(ESTIMATE_ID, ESTIMATE_REVISION_NO, CUSTOMER_ID)))/Estimate_Version_Quantity_API.Get_Quantity(ESTIMATE_ID, ESTIMATE_REVISION_NO, ESTIMATE_COST_VERSION, NODE_ID) * Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      label = "Total Cost Per Pallet/Base";
+      maxlength = 2000;
+      editable = [false];
+      format = ifscurrency;
+      insertable = [false];
+   }
+}
+
+------------------------------- ENUMERATIONS --------------------------------
+
+
+---------------------------------- QUERIES ----------------------------------
+
+
+---------------------------------- ACTIONS ----------------------------------
+
+
+--------------------------------- FUNCTIONS ---------------------------------
+
+
+-------------------------------- STRUCTURES ---------------------------------
+
+
+--------------------------------- VIRTUALS ----------------------------------
+
+
+--------------------------------- SUMMARIES ---------------------------------
+
+
+-------------------------------- SINGLETONS ---------------------------------

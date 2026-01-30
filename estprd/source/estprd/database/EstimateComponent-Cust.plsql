@@ -24,7 +24,8 @@ PROCEDURE Prepare_Insert___ (
 IS
 BEGIN
    super(attr_);
-   Client_SYS.Set_Item_Value('C_QUANTITY_PER_PALLET', 0, attr_);
+   Client_SYS.Set_Item_Value('C_QUANTITY_PER_PALLET', 1, attr_);
+   Client_SYS.Set_Item_Value('C_CONSUMER_UNIT_PER_UOM', 1, attr_);
 END Prepare_Insert___;
 
 

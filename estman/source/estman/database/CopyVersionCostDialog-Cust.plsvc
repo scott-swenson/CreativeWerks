@@ -1,0 +1,26 @@
+-----------------------------------------------------------------------------
+--
+--  Fragment:     CopyVersionCostDialog
+--  Component:    ESTMAN
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+layer Cust;
+
+
+@Override 
+PROCEDURE Copy_Node_Version___ (
+   estimate_id_          IN NUMBER,
+   estimate_revision_no_ IN NUMBER,
+   version_no_           IN NUMBER,
+   node_id_              IN NUMBER,
+   from_version_no_      IN NUMBER)
+IS
+BEGIN
+   super(estimate_id_, estimate_revision_no_, version_no_, node_id_, from_version_no_);
+END Copy_Node_Version___;
+

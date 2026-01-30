@@ -59,7 +59,23 @@ command UpsertDefaultOverheads for EstimateChildNode {
 @Override
 group EstimateTopNodeGroup for EstimateTopNode {
    @DynamicComponentDependency ESTPRD
-   field CQuantityPerPallet;
+   measure VersionQty(EstimateComponentRef.UnitMeas) {
+      validate command {
+         execute {
+            call CRefreshCEstimatePerPallet();
+         }
+      }
+   }
+   
+   @DynamicComponentDependency ESTPRD
+   field CQuantityPerPallet {
+      validate command {
+         execute {
+            call CRefreshCEstimatePerPallet();
+         }
+      }
+   }
+
    @DynamicComponentDependency ESTPRD
    computedfield TotalPallets {
       value = "#{VersionQty / CQuantityPerPallet}";
@@ -71,6 +87,22 @@ group EstimateTopNodeGroup for EstimateTopNode {
    computedfield TotalConsumerUnits {
       value = "#{VersionQty * CConsumerUnitPerUom}";
       visible = [CConsumerUnitPerUom > 0];
+   }
+   @DynamicComponentDependency ESTPRD
+   computedfield CostPerConsumerUnit {
+      value = "#{TotalLevelCost / VersionQty / CConsumerUnitPerUom}";
+      visible = [CConsumerUnitPerUom > 0];
+   }
+   @DynamicComponentDependency ESTPRD
+   computedfield CostPerPallet {
+      value = "#{TotalLevelCost / (VersionQty / CQuantityPerPallet)}";
+      visible = [CQuantityPerPallet > 0];
+   }
+   @DynamicComponentDependency ESTPRD
+   computedfield CostPerUnit {
+      label = "Cost Per ${EstimateComponentRef.UnitMeas}";
+      value = "#{TotalLevelCost / VersionQty}";
+      visible = [CQuantityPerPallet > 0];
    }
 }
 
@@ -91,6 +123,22 @@ group EstimateChildNodeGroup for EstimateChildNode {
       value = "#{RequiredQty * CConsumerUnitPerUom}";
       visible = [CConsumerUnitPerUom > 0];
    }
+   @DynamicComponentDependency ESTPRD
+   computedfield CostPerConsumerUnit {
+      value = "#{TotalLevelCost / RequiredQty / CConsumerUnitPerUom}";
+      visible = [CConsumerUnitPerUom > 0];
+   }
+   @DynamicComponentDependency ESTPRD
+   computedfield CostPerPallet {
+      value = "#{TotalLevelCost / (RequiredQty / CQuantityPerPallet)}";
+      visible = [CQuantityPerPallet > 0];
+   }
+   @DynamicComponentDependency ESTPRD
+   computedfield CostPerUnit {
+      label = "Cost Per ${EstimateComponentRef.UnitMeas}";
+      value = "#{TotalLevelCost / RequiredQty}";
+      visible = [CQuantityPerPallet > 0];
+   }
 }
 
 
@@ -108,7 +156,10 @@ list CEstimatePerPalletTopList for CEstimatePerPalletTop {
       columnvisible = [false];
    }
    field AmountPerPallet;
-   static TotalAmount;
+   field TotalAmount {
+      editable = [false];
+
+   }
 
    summary = AmountPerPallet, TotalAmount;
 }
@@ -133,6 +184,19 @@ list CEstimatePerPalletChildList for CEstimatePerPalletChild {
 }
 
 
+@Override
+list NodeCostList for EstimateNodeCost {
+   @DynamicComponentDependency ESTPRD
+   static LevelVariableCostPerPallet;
+   @DynamicComponentDependency ESTPRD
+   static LevelVariableCostPerConsumerUnit;
+   @DynamicComponentDependency ESTPRD
+   static AccumVariableCostPerPallet;
+   @DynamicComponentDependency ESTPRD
+   static AccumVariableCostPerConsumerUnit;
+   summary = LevelVariableCost, AccumVariableCost, LevelCostContingency, AccumulatedCostContingency, LevelAdditionalCost, AccAdditionalCost, LevelVariableCostPerPallet, LevelVariableCostPerConsumerUnit, AccumVariableCostPerPallet, AccumVariableCostPerConsumerUnit;
+
+}
 ---------------------------------- DIALOGS ----------------------------------
 
 
