@@ -5,11 +5,11 @@ projection CEstimatePerPalDefaultHandling;
 description "Put some useful description here ...";
 
 --------------------------------- FRAGMENTS ---------------------------------
-
+include fragment UserAllowedSiteLovSelector;
 ----------------------------- NAVIGATOR ENTRIES -----------------------------
 navigator {
    entry CEstimatePerPalDefaultOverviewNavEntry parent EstmanNavigator.EstimateBidManagementBasicDataNavEntry at index 1000 {
-      label = "Per Pallet Defaults";
+      label = "Overhead Per Pallet Defaults";
       page CEstimatePerPalDefaultOverview;
 
    }
@@ -19,7 +19,7 @@ navigator {
 
 -------------------------------- MAIN PAGES ---------------------------------
 page CEstimatePerPalDefaultOverview using CEstimatePerPalDefaultSet {
-   label = "Per Pallet Defaults";
+   label = "Overhead Per Pallet Defaults";
    list CEstimatePerPalDefaultList;
 }
 
@@ -36,14 +36,15 @@ page CEstimatePerPalDefaultOverview using CEstimatePerPalDefaultSet {
 list CEstimatePerPalDefaultList for CEstimatePerPalDefault {
    orderby = Contract, OverheadType;
    static Company;
-   lov CompanySiteRef with CompanySiteSelector {
+   lov CompanySiteRef with ReferenceUserAllowedSiteLovSelector {
       label = "Site";
-      description = CompanySiteRef.Name;
+      description = CompanySiteRef.ContractDesc;
       validate command {
          execute {
             set Company = CompanySiteRef.Company;
          }
       }
+      preview = UserAllowedSiteLovCard;
    }
    field OverheadType;
    lov CostElementRef with ProjectCostElementSelector {

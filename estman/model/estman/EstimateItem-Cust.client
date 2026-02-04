@@ -12,8 +12,6 @@ description "Put some useful description here ...";
 @Override
 page EstimateNodeForm using EstimateTopNodeSet {
 
-
-
    tabs {
       @DynamicComponentDependency ESTPRD
       tab {
@@ -66,7 +64,7 @@ group EstimateTopNodeGroup for EstimateTopNode {
          }
       }
    }
-   
+
    @DynamicComponentDependency ESTPRD
    field CQuantityPerPallet {
       validate command {
@@ -158,9 +156,7 @@ list CEstimatePerPalletTopList for CEstimatePerPalletTop {
    field AmountPerPallet;
    field TotalAmount {
       editable = [false];
-
    }
-
    summary = AmountPerPallet, TotalAmount;
 }
 
