@@ -64,7 +64,6 @@ group EstimateTopNodeGroup for EstimateTopNode {
          }
       }
    }
-
    @DynamicComponentDependency ESTPRD
    field CQuantityPerPallet {
       validate command {
@@ -73,11 +72,14 @@ group EstimateTopNodeGroup for EstimateTopNode {
          }
       }
    }
-
    @DynamicComponentDependency ESTPRD
    computedfield TotalPallets {
       value = "#{VersionQty / CQuantityPerPallet}";
-      visible = [CQuantityPerPallet > 0];
+      visible = [CQuantityPerPallet > 0 and isDirty];
+   }
+   @DynamicComponentDependency ESTPRD
+   static CTotalPallets {
+      visible = [not isDirty];
    }
    @DynamicComponentDependency ESTPRD
    field CConsumerUnitPerUom;
@@ -93,14 +95,13 @@ group EstimateTopNodeGroup for EstimateTopNode {
    }
    @DynamicComponentDependency ESTPRD
    computedfield CostPerPallet {
-      value = "#{TotalLevelCost / (VersionQty / CQuantityPerPallet)}";
+      value = "#{TotalLevelCost / CTotalPallets}";
       visible = [CQuantityPerPallet > 0];
    }
    @DynamicComponentDependency ESTPRD
    computedfield CostPerUnit {
       label = "Cost Per ${EstimateComponentRef.UnitMeas}";
       value = "#{TotalLevelCost / VersionQty}";
-      visible = [CQuantityPerPallet > 0];
    }
 }
 
@@ -108,11 +109,29 @@ group EstimateTopNodeGroup for EstimateTopNode {
 @Override
 group EstimateChildNodeGroup for EstimateChildNode {
    @DynamicComponentDependency ESTPRD
-   field CQuantityPerPallet;
+   measure VersionQty(EstimateComponentRef.UnitMeas) {
+      validate command {
+         execute {
+            call CRefreshCEstimatePerPallet();
+         }
+      }
+   }
+   @DynamicComponentDependency ESTPRD
+   field CQuantityPerPallet {
+      validate command {
+         execute {
+            call CRefreshCEstimatePerPallet();
+         }
+      }
+   }
    @DynamicComponentDependency ESTPRD
    computedfield TotalPallets {
-      value = "#{RequiredQty / CQuantityPerPallet}";
-      visible = [CQuantityPerPallet > 0];
+      value = "#{VersionQty / CQuantityPerPallet}";
+      visible = [CQuantityPerPallet > 0 and isDirty];
+   }
+   @DynamicComponentDependency ESTPRD
+   static CTotalPallets {
+      visible = [not isDirty];
    }
    @DynamicComponentDependency ESTPRD
    field CConsumerUnitPerUom;
@@ -128,14 +147,13 @@ group EstimateChildNodeGroup for EstimateChildNode {
    }
    @DynamicComponentDependency ESTPRD
    computedfield CostPerPallet {
-      value = "#{TotalLevelCost / (RequiredQty / CQuantityPerPallet)}";
+      value = "#{TotalLevelCost / CTotalPallets}";
       visible = [CQuantityPerPallet > 0];
    }
    @DynamicComponentDependency ESTPRD
    computedfield CostPerUnit {
       label = "Cost Per ${EstimateComponentRef.UnitMeas}";
       value = "#{TotalLevelCost / RequiredQty}";
-      visible = [CQuantityPerPallet > 0];
    }
 }
 
@@ -180,18 +198,16 @@ list CEstimatePerPalletChildList for CEstimatePerPalletChild {
 }
 
 
-@Override
+@Override @DynamicComponentDependency ESTPRD
 list NodeCostList for EstimateNodeCost {
-   @DynamicComponentDependency ESTPRD
+   orderby = CostElementId;
    static LevelVariableCostPerPallet;
-   @DynamicComponentDependency ESTPRD
+   static LevelVariableCostPerUoM;
    static LevelVariableCostPerConsumerUnit;
-   @DynamicComponentDependency ESTPRD
    static AccumVariableCostPerPallet;
-   @DynamicComponentDependency ESTPRD
+   static AccumVariableCostPerUoM;
    static AccumVariableCostPerConsumerUnit;
-   summary = LevelVariableCost, AccumVariableCost, LevelCostContingency, AccumulatedCostContingency, LevelAdditionalCost, AccAdditionalCost, LevelVariableCostPerPallet, LevelVariableCostPerConsumerUnit, AccumVariableCostPerPallet, AccumVariableCostPerConsumerUnit;
-
+   summary = LevelVariableCost, AccumVariableCost, LevelCostContingency, AccumulatedCostContingency, LevelAdditionalCost, AccAdditionalCost, LevelVariableCostPerPallet, LevelVariableCostPerConsumerUnit, AccumVariableCostPerPallet, AccumVariableCostPerConsumerUnit, LevelVariableCostPerUoM, AccumVariableCostPerUoM;
 }
 ---------------------------------- DIALOGS ----------------------------------
 

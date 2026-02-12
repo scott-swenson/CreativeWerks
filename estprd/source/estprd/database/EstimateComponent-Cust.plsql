@@ -81,6 +81,46 @@ END Zero_Not_Allowed___;
 
 
 -------------------- LU SPECIFIC PUBLIC METHODS -----------------------------
+FUNCTION C_Get_Total_Pallets(
+   estimate_id_          IN  NUMBER,
+   estimate_revision_no_ IN  NUMBER,
+   node_id_              IN  NUMBER) RETURN NUMBER 
+IS 
+   rec_   estimate_component_tab%ROWTYPE;
+   quantity_per_pallet_ NUMBER;
+   component_qty_required_ NUMBER;
+BEGIN
+   rec_ := Get_Object_By_Keys___(estimate_id_, estimate_revision_no_, node_id_);
+   component_qty_required_ := Get_Comp_Qty_Required(estimate_id_, estimate_revision_no_, node_id_);
+   IF rec_.c_quantity_per_pallet IS NULL THEN 
+      quantity_per_pallet_ := 1;
+   ELSIF rec_.c_quantity_per_pallet = 0 THEN 
+      quantity_per_pallet_ := 1;
+   ELSE
+      quantity_per_pallet_ := rec_.c_quantity_per_pallet;
+   END IF;
+   RETURN CEIL(component_qty_required_ / quantity_per_pallet_);
+END C_Get_Total_Pallets;
+
+
+FUNCTION C_Get_Total_Consumer_Units(
+   estimate_id_          IN  NUMBER,
+   estimate_revision_no_ IN  NUMBER,
+   node_id_              IN  NUMBER) RETURN NUMBER 
+IS 
+   rec_   estimate_component_tab%ROWTYPE;
+   consumer_units_ NUMBER;
+   component_qty_required_ NUMBER;
+BEGIN
+   rec_ := Get_Object_By_Keys___(estimate_id_, estimate_revision_no_, node_id_);
+   component_qty_required_ := Get_Comp_Qty_Required(estimate_id_, estimate_revision_no_, node_id_);
+   IF rec_.c_consumer_unit_per_uom IS NULL THEN 
+      consumer_units_ := 0;
+   ELSE 
+      consumer_units_ := rec_.c_consumer_unit_per_uom;
+   END IF;
+   RETURN component_qty_required_ * consumer_units_;
+END C_Get_Total_Consumer_Units;
 
 
 -------------------- LU CUST NEW METHODS -------------------------------------

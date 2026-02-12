@@ -22,6 +22,11 @@ entity EstimateTopNode using EstimateNode {
       label = "Consumer Unit Per UoM";
       fetch = "Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_ID, Estimate_Revision_No, Node_ID)";
    }
+   @DynamicComponentDependency ESTPRD
+   attribute CTotalPallets Number {
+      label = "Total Pallets";
+      fetch = "Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
+   }
    array CEstimatePerPalletTopRef(EstimateId, EstimateRevisionNo, SelectedVersionNo, NodeId) to CEstimatePerPalletTop(EstimateId, EstimateRevisionNo, EstimateCostVersion, NodeId);
    action ResetPerPalletToDefaultCommand {
       ludependencies = CEstimatePerPallet;
@@ -41,6 +46,11 @@ entity EstimateChildNode using EstimateNode {
       label = "Consumer Unit Per UoM";
       fetch = "Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_ID, Estimate_Revision_No, Node_ID)";
    }
+   @DynamicComponentDependency ESTPRD
+   attribute CTotalPallets Number {
+      label = "Total Pallets";
+      fetch = "Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
+   }
    array CEstimatePerPalletChildRef(EstimateId, EstimateRevisionNo, SelectedVersionNo, NodeId) to CEstimatePerPalletChild(EstimateId, EstimateRevisionNo, EstimateCostVersion, NodeId);
    action ResetPerPalletToDefaultCommand {
       ludependencies = CEstimatePerPallet;
@@ -54,12 +64,12 @@ entity CEstimatePerPalletTop using CEstimatePerPallet {
    }
    @DynamicComponentDependency ESTPRD
    attribute TotalPallets Number {
-      fetch = "Estimate_Component_API.Get_Version_Qty(ESTIMATE_ID, ESTIMATE_REVISION_NO, NODE_ID) / nvl(Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID), 1)";
+      fetch = "Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
    }
    @DynamicComponentDependency ESTPRD
    attribute TotalAmount Number {
       format = ifscurrency;
-      fetch = "Amount_Per_Pallet * Estimate_Component_API.Get_Version_Qty(ESTIMATE_ID, ESTIMATE_REVISION_NO, NODE_ID) / nvl(Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID), 1)";
+      fetch = "Amount_Per_Pallet * Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
    }
    reference CostElementRef(Company, CostElementId) to ProjectCostElement(Company, ProjectCostElement);
 }
@@ -72,12 +82,12 @@ entity CEstimatePerPalletChild using CEstimatePerPallet {
    }
    @DynamicComponentDependency ESTPRD
    attribute TotalPallets Number {
-      fetch = "Estimate_Node_API.Get_Qty_Required(ESTIMATE_ID, ESTIMATE_REVISION_NO, NODE_ID, estimate_cost_version) / nvl(Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID), 1)";
+      fetch = "Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
    }
    @DynamicComponentDependency ESTPRD
    attribute TotalAmount Number {
       format = ifscurrency;
-      fetch = "Amount_Per_Pallet * Estimate_Node_API.Get_Qty_Required(ESTIMATE_ID, ESTIMATE_REVISION_NO, NODE_ID, estimate_cost_version) / nvl(Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_ID, Estimate_Revision_No, Node_ID), 1)";
+      fetch = "Amount_Per_Pallet * Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
    }
    reference CostElementRef(Company, CostElementId) to ProjectCostElement(Company, ProjectCostElement);
 }
@@ -87,25 +97,39 @@ entity CEstimatePerPalletChild using CEstimatePerPallet {
 entity EstimateNodeCost {
    @DynamicComponentDependency ESTPRD
    attribute LevelVariableCostPerPallet Number {
-      fetch = "NVL(LEVEL_COST, 0) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id))";
+      fetch = "NVL(LEVEL_COST, 0) / Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
       format = ifscurrency;
       insertable = [false];
    }
    @DynamicComponentDependency ESTPRD
    attribute LevelVariableCostPerConsumerUnit Number {
-      fetch = "NVL(LEVEL_COST, 0) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      fetch = "NVL(LEVEL_COST, 0) / Estimate_Component_API.C_Get_Total_Consumer_Units(Estimate_ID, Estimate_Revision_No, Node_ID)";
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute LevelVariableCostPerUoM Number {
+      label = "Level Variable Cost Per UoM";
+      fetch = "NVL(LEVEL_COST, 0) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id)";
       format = ifscurrency;
       insertable = [false];
    }
    @DynamicComponentDependency ESTPRD
    attribute AccumVariableCostPerPallet Number {
-      fetch = "NVL(ACCUMULATED_COST, 0) / (Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Quantity_Per_Pallet(Estimate_Id, Estimate_Revision_No, Node_Id))";
+      fetch = "NVL(ACCUMULATED_COST, 0) / Estimate_Component_API.C_Get_Total_Pallets(Estimate_ID, Estimate_Revision_No, Node_ID)";
       format = ifscurrency;
       insertable = [false];
    }
    @DynamicComponentDependency ESTPRD
    attribute AccumVariableCostPerConsumerUnit Number {
-      fetch = "NVL(ACCUMULATED_COST, 0) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id) / Estimate_Component_API.Get_C_Consumer_Unit_Per_Uom(Estimate_Id, Estimate_Revision_No, Node_Id)";
+      fetch = "NVL(ACCUMULATED_COST, 0) / Estimate_Component_API.C_Get_Total_Consumer_Units(Estimate_ID, Estimate_Revision_No, Node_ID)";
+      format = ifscurrency;
+      insertable = [false];
+   }
+   @DynamicComponentDependency ESTPRD
+   attribute AccumVariableCostPerUoM Number {
+      label = "Accum Variable Cost Per UoM";
+      fetch = "NVL(ACCUMULATED_COST, 0) / Estimate_Component_API.Get_Comp_Qty_Required(Estimate_Id, Estimate_Revision_No, Node_Id)";
       format = ifscurrency;
       insertable = [false];
    }

@@ -1,0 +1,168 @@
+-----------------------------------------------------------------------------
+--
+--  Logical unit: EstimateDeliverablesHandling
+--  Component:    ESTMAN
+--
+--  IFS Developer Studio Template Version 3.0
+--
+--  Date    Sign    History
+--  ------  ------  ---------------------------------------------------------
+-----------------------------------------------------------------------------
+
+layer Cust;
+
+@DynamicComponentDependency CRM
+PROCEDURE C_Change_Business_Opportunity___ (
+   customer_id_ IN VARCHAR2,
+   opportunity_no_ IN VARCHAR2,
+   revision_no_ IN VARCHAR2,
+   existing_estimate_id_ IN NUMBER,
+   existing_estimate_revision_no_ IN NUMBER,
+   existing_estimate_cost_version_ IN NUMBER,
+   change_to_estimate_id_ IN NUMBER,
+   change_to_estimate_revision_no_ IN NUMBER,
+   change_to_estimate_cost_version_ IN NUMBER,
+   update_connected_object_ IN BOOLEAN)
+IS
+   info_             VARCHAR2(32000);
+   attr_             VARCHAR2(32000);
+   objid_            VARCHAR2(32000);
+   objversion_       VARCHAR2(32000);
+   quantity_         NUMBER;
+   new_line_no_      VARCHAR2(32000);
+   new_line_item_no_ NUMBER;
+   lu_name_          VARCHAR2(1);
+   part_no_          VARCHAR2(32000);
+
+   CURSOR Get_Opportunity_Lines IS
+      SELECT *
+        FROM business_opportunity_line
+       WHERE opportunity_no = opportunity_no_
+         AND revision_no = revision_no_;
+
+   CURSOR Deliverable_Lines   (
+      estimate_id_           IN NUMBER,
+      estimate_revision_no_  IN NUMBER,
+      estimate_cost_version_ IN NUMBER) 
+      IS
+      SELECT *
+        FROM estimate_deliverable e
+       WHERE e.estimate_id = estimate_id_
+         AND e.estimate_revision_no = estimate_revision_no_
+         AND e.estimate_cost_version = estimate_cost_version_;
+BEGIN
+   --reset BO where I want the new connections.
+   FOR line IN Get_Opportunity_Lines LOOP
+      business_opportunity_line_api.Remove__(info_, line.objid, line.objversion, 'DO');
+   END LOOP;
+
+   --unpeg Existing BO.
+   IF estimate_deliverable_api.Check_Bo_Created(estimate_id_          => existing_estimate_id_,
+                                                estimate_revision_no_ => existing_estimate_revision_no_,
+                                                selected_version_no_  => existing_estimate_cost_version_,
+                                                customer_id_          => customer_id_) = 'TRUE' THEN
+      estimate_deliverable_api.Unpeg_Connected_Obj_Lines(estimate_id_            => existing_estimate_id_,
+                                                         estimate_revision_no_   => existing_estimate_revision_no_,
+                                                         estimate_cost_versions_ => existing_estimate_cost_version_,
+                                                         customer_id_            => customer_id_);
+   END IF;
+
+   --Remove Reference on existing estimate                                                   
+   FOR new_line IN Deliverable_Lines(existing_estimate_id_, existing_estimate_revision_no_, existing_estimate_cost_version_) LOOP
+      Client_SYS.Clear_Attr(attr_);
+      Client_SYS.Add_To_Attr('OBJECT_TYPE_DB', '', attr_);
+      Client_SYS.Add_To_Attr('REF1', '', attr_);
+      Client_SYS.Add_To_Attr('REF2', '', attr_);
+      Client_SYS.Add_To_Attr('REF3', '', attr_);
+      Client_SYS.Add_To_Attr('REF4', '', attr_);
+      Client_SYS.Add_To_Attr('UPDATE_EXTERNAL', '', attr_);
+      --update reference      
+      estimate_deliverable_api.Modify__(info_, new_line.objid, new_line.objversion, attr_, 'DO');
+   
+   END LOOP;
+
+   --Add New Lines
+   FOR new_line IN Deliverable_Lines(change_to_estimate_id_, change_to_estimate_revision_no_, change_to_estimate_cost_version_) LOOP
+      client_sys.clear_attr(attr_);
+      client_sys.Add_To_Attr('OPPORTUNITY_NO', opportunity_no_, attr_);
+      client_sys.Add_To_Attr('REVISION_NO', revision_no_, attr_);
+      business_opportunity_line_api.New__(info_, objid_, objversion_, attr_, 'PREPARE');
+      client_sys.Set_Item_Value('OPPORTUNITY_NO', opportunity_no_, attr_);
+      client_sys.Set_Item_Value('REVISION_NO', revision_no_, attr_);
+      IF new_line.sales_part IS NOT NULL THEN
+         client_sys.Set_Item_Value('NON_EXIST_PART_DB', 'FALSE', attr_);
+         client_sys.Set_Item_Value('CATALOG_NO', new_line.sales_part, attr_);
+         client_sys.Set_Item_Value('DESCRIPTION', Sales_Part_API.Get_Catalog_Desc(new_line.contract, new_line.sales_part), attr_);
+      ELSE
+         client_sys.Set_Item_Value('NON_EXIST_PART_DB', 'TRUE', attr_);
+         part_no_ := estimate_component_api.Get_Part_No(estimate_id_ => new_line.estimate_id, estimate_revision_no_ => new_line.estimate_revision_no, node_id_ => new_line.node_id);
+         client_sys.Set_Item_Value('DESCRIPTION', part_no_, attr_);
+      END IF;
+      quantity_ := estimate_node_api.Get_Qty_Required(estimate_id_           => new_line.estimate_id,
+                                                      estimate_revision_no_  => new_line.estimate_revision_no,
+                                                      node_id_               => new_line.node_id,
+                                                      estimate_cost_version_ => new_line.estimate_cost_version);
+      client_sys.Set_Item_Value('QTY', quantity_, attr_);
+      client_sys.Set_Item_Value('CON_OBJECT_TYPE_DB', 'ESTIMATE', attr_);
+      client_sys.Set_Item_Value('CON_OBJECT_REF1', new_line.estimate_id, attr_);
+      client_sys.Set_Item_Value('CON_OBJECT_REF2', new_line.estimate_revision_no, attr_);
+      client_sys.Set_Item_Value('CON_OBJECT_REF3', new_line.estimate_cost_version, attr_);
+      client_sys.Set_Item_Value('CON_OBJECT_REF4', new_line.node_id, attr_);
+      client_sys.Set_Item_Value('SALES_UNIT_MEAS', estimate_node_api.Get_Unit_Meas(new_line.estimate_id, new_line.estimate_revision_no, new_line.node_id), attr_);
+      --add new lines
+      business_opportunity_line_api.New__(info_, objid_, objversion_, attr_, 'DO');
+   
+      new_line_no_      := client_sys.Get_Item_Value('LINE_NO', attr_);
+      new_line_item_no_ := client_sys.Get_Item_Value_To_Number('LINE_ITEM_NO', attr_, lu_name_);
+      Client_SYS.Clear_Attr(attr_);
+      Client_SYS.Add_To_Attr('OBJECT_TYPE_DB', Est_Deliverable_Obj_Type_API.DB_BUSINESS_OPPORTUNITY, attr_);
+      Client_SYS.Add_To_Attr('REF1', opportunity_no_, attr_);
+      Client_SYS.Add_To_Attr('REF2', revision_no_, attr_);
+      Client_SYS.Add_To_Attr('REF3', new_line_no_, attr_);
+      Client_SYS.Add_To_Attr('REF4', new_line_item_no_, attr_);
+      Client_SYS.Add_To_Attr('UPDATE_EXTERNAL', 'FALSE', attr_);
+      --update reference      
+      estimate_deliverable_api.Modify__(info_, new_line.objid, new_line.objversion, attr_, 'DO');
+      
+   END LOOP;
+   IF update_connected_object_ AND opportunity_no_ IS NOT NULL THEN 
+      Client_SYS.Clear_Attr(attr_);
+      Client_SYS.Add_To_Attr('ESTIMATE_COST_VERSION',change_to_estimate_cost_version_, attr_);
+      Estimate_Deliverable_API.Update_Bo_Lines(change_to_estimate_id_,change_to_estimate_revision_no_, change_to_estimate_cost_version_, opportunity_no_, customer_id_);
+   END IF;
+END C_Change_Business_Opportunity___;
+
+
+@DynamicComponentDependency CRM
+FUNCTION C_Get_Business_Opportuntiy_Connection_Information___ (
+   business_opportunity_no_ IN VARCHAR2,
+   business_opportunity_revision_no_ IN VARCHAR2) RETURN C_Business_Opportunity_Connection_Information_Structure_Rec
+IS
+   rec_ C_Business_Opportunity_Connection_Information_Structure_Rec;
+BEGIN
+	SELECT con_object_ref1, 
+          con_object_ref2, 
+          con_object_ref3
+     INTO rec_.existing_estimate_id, 
+          rec_.existing_estimate_revision_no,
+          rec_.existing_estimate_cost_version
+     FROM business_opportunity_line 
+    WHERE opportunity_no = business_opportunity_no_
+      AND revision_no = business_opportunity_revision_no_
+    GROUP BY con_object_ref1, 
+             con_object_ref2, 
+             con_object_ref3;
+   rec_.connection_exists := TRUE;
+   rec_.multiple_connections_exist := FALSE;
+   RETURN rec_;
+EXCEPTION 
+   WHEN no_data_found THEN 
+      rec_.connection_exists := FALSE;
+      rec_.multiple_connections_exist := FALSE;
+      RETURN rec_;
+   WHEN too_many_rows THEN 
+      rec_.connection_exists := TRUE;
+      rec_.multiple_connections_exist := TRUE;
+      RETURN rec_;
+END C_Get_Business_Opportuntiy_Connection_Information___;
+

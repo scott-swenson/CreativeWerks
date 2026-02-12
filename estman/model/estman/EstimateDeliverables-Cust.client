@@ -12,119 +12,252 @@ description "Put some useful description here ...";
 
 
 --------------------------------- COMMANDS ----------------------------------
+@DynamicComponentDependency CRM
+command CChangeBusinessOpportunityCommand for EstimateVersion {
+   label = "Change Business Opportunity";
+   mode = SingleRecord;
+   enabled = [(Objstate = "Confirmed"  or Objstate = "PartlyCompleted" or Objstate = "Completed") and(CheckSQExists = "FALSE")
+   and(VersionIncluded and SalesPriceCurr != null) and EstimateHeaderState != "Closed" and EstimateHeaderState != "Cancelled"];
+   execute {
+      if [not(Objstate = "Confirmed"  or Objstate = "PartlyCompleted" or Objstate = "Completed")] {
+         error("Option only valid when version status is confirmed.");
+         exit;
+      }
+      else {
+         call CheckSalesPartExistInDeliverables(Selection) into SalesPartCheck;
+         if [SalesPartCheck = false] {
+            confirm("There are deliverable lines representing existing parts without a defined sales part.
+            If proceeding, corresponding business opportunity lines will be created as Non-Existing Parts. Do you want to proceed?.") {
+               when CANCEL {
+                  exit;
+               }
+            }
+         }
+         dialog CEstimateChangeBusinessOpportunityDialog(CustomerId, parent.CustomerName, OpportunityNo, RevisionNo, CBusinessOpportunityRevisionLovRef.EstimateId, CBusinessOpportunityRevisionLovRef.EstimateRevisionNo, null, EstimateId, EstimateRevisionNo, EstimateCostVersion, true) {
+            when OK {
+               exit OK;
+            }
+         }
+         exit CANCEL;
+      }
+   }
+}
 
 
 --------------------------------- SELECTORS ---------------------------------
+@DynamicComponentDependency CRM
+selector CBusinessOpportunityRevisionLovCustomSelector for CBusinessOpportunityRevisionLov {
+   static OpportunityNo;
+   static RevisionNo;
+   badge Objstate {
+      style = IconAndText;
+      emphasis StateActive = [Objstate = "Active"];
+      emphasis StateObsolete = [Objstate = "Obsolete"];
+      emphasis Progress4 = [true];
+   }
+   badge BusinessOppObjstate {
+      style = IconAndText;
+      emphasis StateCreated = [BusinessOppObjstate = "Unconfirmed"];
+      emphasis StateConfirmed = [BusinessOppObjstate = "Confirmed"];
+      emphasis StateInProgress = [BusinessOppObjstate = "InProgress"];
+      emphasis StateCancelled = [BusinessOppObjstate = "Cancelled"];
+      emphasis StateClosed = [BusinessOppObjstate = "Closed"];
+      emphasis StateStopped = [BusinessOppObjstate = "OnHold"];
+   }
+   static EstimateId;
+   static EstimateRevisionNo;
+}
 
+
+@DynamicComponentDependency CRM
+selector CBusinessOpportunityLovCustomSelector for CBusinessOpportunityLov {
+   static OpportunityNo;
+   badge Objstate {
+      label = "Status";
+      emphasis StateCreated = [Objstate = "Unconfirmed"];
+      emphasis StateConfirmed = [Objstate = "Confirmed"];
+      emphasis StateInProgress = [Objstate = "InProgress"];
+      emphasis StateCancelled = [Objstate = "Cancelled"];
+      emphasis StateClosed = [Objstate = "Closed"];
+      emphasis StateStopped = [Objstate = "OnHold"];
+   }
+   static Description;
+}
 
 ---------------------------------- GROUPS -----------------------------------
+@DynamicComponentDependency CRM
+group CChangeBusinessOpportunityStructureSelectionGroup for CChangeBusinessOpportunityStructure {
+   label = "Selection";
+   static CustomerName;
+   lov CBusinessOpportunityLovRef with CBusinessOpportunityLovCustomSelector using CGetBusinessOpportunityLov(CustomerId) {
+      label = "Opportunity";
+      validate command {
+         variable BusOpStrVar Structure(CBusinessOpportunityConnectionInformationStructure);
+         execute {
+            call CGetBusinessOpportuntiyConnectionInformation(OpportunityNo, RevisionNo) into BusOpStrVar;
+            if [BusOpStrVar.MultipleConnectionsExist] {
+               error("The selected Business Opportunity has multiple connections.  Updates/Changes must be handled manually.");
+               set RevisionNo = null;
+            }
+            else {
+               set ExistingEstimateId = BusOpStrVar.ExistingEstimateId;
+               set ExistingEstimateRevisionNo = BusOpStrVar.ExistingEstimateRevisionNo;
+               set ExistingEstimateCostVersion = BusOpStrVar.ExistingEstimateCostVersion;
+            }
+         }
+      }
+   }
+   lov CBusinessOpportunityRevisionLovRef with CBusinessOpportunityRevisionLovCustomSelector {
+      label = "Revision";
+      validate command {
+         variable BusOpStrVar Structure(CBusinessOpportunityConnectionInformationStructure);
+         execute {
+            call CGetBusinessOpportuntiyConnectionInformation(OpportunityNo, RevisionNo) into BusOpStrVar;
+            if [BusOpStrVar.MultipleConnectionsExist] {
+               error("The selected Business Opportunity has multiple connections.  Updates/Changes must be handled manually.");
+               set RevisionNo = null;
+            }
+            else {
+               set ExistingEstimateId = BusOpStrVar.ExistingEstimateId;
+               set ExistingEstimateRevisionNo = BusOpStrVar.ExistingEstimateRevisionNo;
+               set ExistingEstimateCostVersion = BusOpStrVar.ExistingEstimateCostVersion;
+            }
+         }
+      }
+   }
+   static CBusinessOpportunityRevisionLovRef.RevisionNo;
+   badge CBusinessOpportunityRevisionLovRef.BusinessOppObjstate {
+      emphasis StateCreated = [CBusinessOpportunityLovRef.Objstate = "Unconfirmed"];
+      emphasis StateConfirmed = [CBusinessOpportunityLovRef.Objstate = "Confirmed"];
+      emphasis StateInProgress = [CBusinessOpportunityLovRef.Objstate = "InProgress"];
+      emphasis StateCancelled = [CBusinessOpportunityLovRef.Objstate = "Cancelled"];
+      emphasis StateClosed = [CBusinessOpportunityLovRef.Objstate = "Closed"];
+      emphasis StateStopped = [CBusinessOpportunityLovRef.Objstate = "OnHold"];
+      editable = [false];
+   }
+   badge CBusinessOpportunityRevisionLovRef.Objstate {
+      emphasis StateActive = [CBusinessOpportunityRevisionLovRef.Objstate = "Active"];
+      emphasis StateObsolete = [CBusinessOpportunityRevisionLovRef.Objstate = "Obsolete"];
+      editable = [false];
+   }
+   field UpdateConnectedObject;
+}
+
+
+@DynamicComponentDependency CRM
+group CChangeBusinessOpportunityStructureConnectionGroup for CChangeBusinessOpportunityStructure {
+   label = "Existing Estimate Connection";
+   static ExistingEstimateId {
+      label = "Estimate ID";
+   }
+   static ExistingEstimateRevisionNo {
+      label = "Revision";
+   }
+   static ExistingEstimateCostVersion {
+      label = "Version";
+   }
+}
+@DynamicComponentDependency CRM
+group CChangeBusinessOpportunityStructureChangeToGroup for CChangeBusinessOpportunityStructure {
+   label = "Change To";
+   static ChangeToEstimateId;
+   static ChangeToEstimateRevisionNo;
+   static ChangeToEstimateVersion;
+}
 
 
 ----------------------------------- LISTS -----------------------------------
-//@Override
-//list CustomerVersionLinesList for EstimateVersion {
-//   @DynamicComponentDependency ESTPRD
-//   static CalcSalesPriceBasePerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static CalcSalesPriceCurrPerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static TotalVariableCostBasePerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static TotalAdditionalCostBasePerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static TotalCostBasePerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static CalcSalesPriceBasePerConsumerUnit;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static CalcSalesPriceCurrPerConsumerUnit;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static TotalVariableCostBasePerConsumerUnit;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static TotalAdditionalCostBasePerConsumerUnit;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static TotalCostBasePerConsumerUnit;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static SalesPriceBasePerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static SalesPriceCurrPerPallet;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static SalesPriceBasePerConsumerUnit;
-//
-//   @DynamicComponentDependency ESTPRD
-//   static SalesPriceCurrPerConsumerUnit;
-//}
+@Override
+list CustomerVersionLinesList for EstimateVersion {
+
+
+   commandgroup CommandGroupCmdGroup2 {
+      @DynamicComponentDependency CRM
+      command CChangeBusinessOpportunityCommand;
+   }
+
+}
+
 
 @Override
 list EstimateDeliverableList for EstimateDeliverable {
    @DynamicComponentDependency ESTPRD
-   static QuantityPerPallet;
+   static CQuantityPerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static NumberOfPallets;
+   static CTotalPallets;
 
    @DynamicComponentDependency ESTPRD
-   static ConsumerUnits;
+   static CConsumerUnits;
 
    @DynamicComponentDependency ESTPRD
-   static ConsumerUnitsPerPallet;
+   static CTotalConsumerUnits;
 
    @DynamicComponentDependency ESTPRD
-   static BaseSalesPricePerConsumerUnit;
+   static CConsumerUnitsPerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static SalesPricePerConsumerUnit;
+   static CBaseSalesPricePerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static BaseSalesPricePerPallet;
+   static CSalesPricePerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static SalesPricePerPallet;
+   static CBaseSalesPricePerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static CalcBaseSalesPricePerConsumerUnit;
+   static CSalesPricePerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static CalcSalesPricePerConsumerUnit;
+   static CCalcBaseSalesPricePerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static VariableCostPerConsumerUnit;
+   static CCalcSalesPricePerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static AdditionalCostPerConsumerUnit;
+   static CVariableCostPerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static TotalCostPerConsumerUnit;
+   static CAdditionalCostPerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static CalcBaseSalesPricePerPallet;
+   static CTotalCostPerConsumerUnit;
 
    @DynamicComponentDependency ESTPRD
-   static CalcSalesPricePerPallet;
+   static CCalcBaseSalesPricePerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static VariableCostPerPallet;
+   static CCalcSalesPricePerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static AdditionalCostPerPallet;
+   static CVariableCostPerPallet;
 
    @DynamicComponentDependency ESTPRD
-   static TotalCostPerPallet;
+   static CAdditionalCostPerPallet;
 
+   @DynamicComponentDependency ESTPRD
+   static CTotalCostPerPallet;
 
 }
 ---------------------------------- DIALOGS ----------------------------------
+@DynamicComponentDependency CRM
+dialog CEstimateChangeBusinessOpportunityDialog for CChangeBusinessOpportunityStructure {
+   label = "Create Business Opportunity";
+   input(CustomerId, CustomerName, OpportunityNo, RevisionNo, ExistingEstimateId, ExistingEstimateRevisionNo, ExistingEstimateCostVersion, ChangeToEstimateId, ChangeToEstimateRevisionNo, ChangeToEstimateVersion, UpdateConnectedObject);
+
+   group CChangeBusinessOpportunityStructureSelectionGroup;
+   group CChangeBusinessOpportunityStructureConnectionGroup;
+   group CChangeBusinessOpportunityStructureChangeToGroup;
+
+   commandgroup ButtonCmdGroup {
+      command Ok {
+         execute {
+            call CChangeBusinessOpportunity(CustomerId, OpportunityNo, RevisionNo, ExistingEstimateId, ExistingEstimateRevisionNo, ExistingEstimateCostVersion, ChangeToEstimateId, ChangeToEstimateRevisionNo, ChangeToEstimateVersion, UpdateConnectedObject);
+         }
+      }
+      command Cancel;
+   }
+}
 
 
 -------------------------------- SINGLETONS ---------------------------------

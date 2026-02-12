@@ -136,11 +136,6 @@
          <FORMAT>CURRENCY</FORMAT>
       </ATTRIBUTE>
       <ATTRIBUTE>
-         <CODE_GENERATION_PROPERTIES>
-            <CODE_GENERATION_PROPERTIES>
-               <DB_SQL_IMPLEMENTATION>Estimate_Node_API.Get_Contract(estimate_id, estimate_revision_no, node_id)</DB_SQL_IMPLEMENTATION>
-            </CODE_GENERATION_PROPERTIES>
-         </CODE_GENERATION_PROPERTIES>
          <NAME>Contract</NAME>
          <IS_PRIMARY_KEY>0</IS_PRIMARY_KEY>
          <IS_PARENT_KEY>0</IS_PARENT_KEY>
@@ -217,6 +212,9 @@
          <USE_DEFINITIONS>
             <USE_DEFINITION>
                <COLUMN_NAME>ParentNodeId</COLUMN_NAME>
+            </USE_DEFINITION>
+            <USE_DEFINITION>
+               <COLUMN_NAME>Contract</COLUMN_NAME>
             </USE_DEFINITION>
          </USE_DEFINITIONS>
       </ASSOCIATION>
